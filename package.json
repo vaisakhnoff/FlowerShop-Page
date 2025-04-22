@@ -1,10 +1,12 @@
 {
   "name": "flower-shop-project",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build:css": "npx tailwindcss -i ./public/css/tailwind.css -o ./public/css/output.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -13,11 +15,15 @@
     "axios": "^1.8.4",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "express-handlebars": "^8.0.2",
     "mongoose": "^8.13.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
-  }
+    "autoprefixer": "^10.4.21",
+    "nodemon": "^3.1.9",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.3.5" 
+  },
+  "description": ""
 }
