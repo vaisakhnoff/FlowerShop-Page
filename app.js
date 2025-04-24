@@ -9,13 +9,14 @@ const app = express();
 const user = require('./routes/userRoute')
 
 app.set('view engine','ejs');
-app.set('views',path.join(__dirname,'views'));
+
+app.set("views",[path.join(__dirname,'views/user'),path.join(__dirname,'views/admin')]);
 app.use(express.static(path.join(__dirname,'public')));
+
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());  
 
 db();
-
 
 app.use('/',user);
 

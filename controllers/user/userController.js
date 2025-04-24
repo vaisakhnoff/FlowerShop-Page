@@ -1,7 +1,12 @@
 const getHome = async (req,res) => {
-    res.render('home');
+    res.render('index');
 }
 
 const getProductDetail = async(req,res)=>{
-    res.render('productPage')
+    res.render('product')
+}
+
+module.exports ={
+    getHome,
+    getProductDetail
 }
