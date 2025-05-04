@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Favorites - Anjali Flower Works</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
@@ -44,35 +45,39 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .slide-in {
+      opacity: 0;
+      transform: translateY(20px);
+    }
   </style>
 </head>
-<body class="bg-white text-gray-900 dark:bg-gray-800 dark:text-white pb-20">
+<body class="bg-gray-50 font-['Poppins'] transition-colors duration-300 pb-20">
 
 <!-- Header -->
-<header class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
-  <div class="flex items-center space-x-3">
-    <a href="index.html" class="flex items-center">
-      <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-      </svg>
-    </a>
+<header class="bg-white shadow-sm fixed top-0 w-full z-50 transition-all duration-300" id="header">
+  <div class="p-4 max-w-3xl mx-auto flex items-center justify-between mb-3">
     <div class="flex items-center space-x-2">
+      <a href="index.html" class="flex items-center">
+        <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </a>
       <svg class="w-8 h-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
       </svg>
-      <h1 class="text-xl font-bold logo-text tracking-wide text-teal-600 dark:text-teal-400">My Favorites</h1>
+      <h1 class="text-xl font-bold logo-text tracking-wide text-teal-600">My Favorites</h1>
     </div>
-  </div>
-  <div class="flex items-center space-x-1">
-    <span id="favCount" class="animate__animated animate__heartBeat text-xl px-2 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white flex items-center justify-center">
-      <span class="heart-icon mr-1">❤️</span>
-      <span class="counter">0</span>
-    </span>
+    <div class="flex items-center space-x-1">
+      <span id="favCount" class="animate__animated animate__heartBeat text-xl px-2 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white flex items-center justify-center">
+        <span class="heart-icon mr-1">❤️</span>
+        <span class="counter">0</span>
+      </span>
+    </div>
   </div>
 </header>
 
 <!-- Favorites Filter -->
-<div class="flex overflow-x-auto whitespace-nowrap px-4 py-3 space-x-3 bg-white dark:bg-gray-800 shadow-sm">
+<div class="flex overflow-x-auto whitespace-nowrap px-4 py-3 space-x-3 bg-white dark:bg-gray-800 shadow-sm slide-in">
   <button class="filter-btn px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-full transition-colors duration-300" data-filter="all">All</button>
   <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="indoor">Indoor</button>
   <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="outdoor">Outdoor</button>
@@ -80,7 +85,7 @@
 </div>
 
 <!-- Favorites Grid -->
-<div class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="favoritesGrid">
+<div class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 slide-in" id="favoritesGrid">
   <!-- Favorite items will be dynamically added here -->
 </div>
 
@@ -150,40 +155,40 @@
 <script>
   // Sample favorites data
   let favorites = [
-    { 
-      id: 1, 
-      name: 'Red Roses', 
-      price: 29.99, 
+    {
+      id: 1,
+      name: 'Red Roses',
+      price: 29.99,
       category: 'wedding',
-      image: '/api/placeholder/300/300', 
+      image: '/api/placeholder/300/300',
       tags: ['popular', 'fresh']
     },
-    { 
-      id: 2, 
-      name: 'Tulips', 
-      price: 19.99, 
+    {
+      id: 2,
+      name: 'Tulips',
+      price: 19.99,
       category: 'indoor',
-      image: '/api/placeholder/300/300', 
+      image: '/api/placeholder/300/300',
       tags: ['seasonal']
     },
-    { 
-      id: 3, 
-      name: 'Orchids', 
-      price: 39.99, 
+    {
+      id: 3,
+      name: 'Orchids',
+      price: 39.99,
       category: 'indoor',
-      image: '/api/placeholder/300/300', 
+      image: '/api/placeholder/300/300',
       tags: ['premium', 'limited']
     },
-    { 
-      id: 4, 
-      name: 'Oak Tree', 
-      price: 68.50, 
+    {
+      id: 4,
+      name: 'Oak Tree',
+      price: 68.50,
       category: 'outdoor',
-      image: '/api/placeholder/300/300', 
+      image: '/api/placeholder/300/300',
       tags: ['popular']
     }
   ];
-  
+
   // Get DOM elements
   const favoritesGrid = document.getElementById('favoritesGrid');
   const emptyState = document.getElementById('emptyState');
@@ -194,27 +199,27 @@
   const modalImage = document.getElementById('modalImage');
   const removeFromFavorites = document.getElementById('removeFromFavorites');
   const filterButtons = document.querySelectorAll('.filter-btn');
-  
+
   let activeFilter = 'all';
   let selectedItemId = null;
 
   // Update favorites display
   function updateFavorites() {
-    const filteredFavorites = activeFilter === 'all' 
-      ? favorites 
+    const filteredFavorites = activeFilter === 'all'
+      ? favorites
       : favorites.filter(item => item.category === activeFilter);
-    
+
     favCount.querySelector('.counter').textContent = favorites.length;
-    
+
     if (favorites.length === 0) {
       favoritesGrid.classList.add('hidden');
       emptyState.classList.remove('hidden');
       return;
     }
-    
+
     favoritesGrid.classList.remove('hidden');
     emptyState.classList.add('hidden');
-    
+
     if (filteredFavorites.length === 0) {
       favoritesGrid.innerHTML = `
         <div class="col-span-full py-10 text-center">
@@ -223,7 +228,7 @@
       `;
       return;
     }
-    
+
     favoritesGrid.innerHTML = filteredFavorites.map(item => `
       <div class="card-hover bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden" data-id="${item.id}">
         <div class="relative">
@@ -260,7 +265,7 @@
         </div>
       </div>
     `).join('');
-    
+
     // Add event listeners to buttons
     document.querySelectorAll('.favorite-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -269,14 +274,14 @@
         toggleFavorite(id);
       });
     });
-    
+
     document.querySelectorAll('.view-details').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = parseInt(btn.dataset.id);
         openModal(id);
       });
     });
-    
+
     document.querySelectorAll('.card-hover').forEach(card => {
       card.addEventListener('click', () => {
         const id = parseInt(card.dataset.id);
@@ -284,17 +289,17 @@
       });
     });
   }
-  
+
   // Toggle favorite status
   function toggleFavorite(id) {
     const btn = event.target;
     btn.classList.add('favorite-animation');
-    
+
     // Add vibration effect if supported
     if (navigator.vibrate) {
       navigator.vibrate(100);
     }
-    
+
     setTimeout(() => {
       const index = favorites.findIndex(f => f.id === id);
       if (index !== -1) {
@@ -304,41 +309,41 @@
           closeModalHandler();
         }
         updateFavorites();
-        
+
         // Show toast notification
         showToast('Item removed from favorites');
       }
     }, 600);
   }
-  
+
   // Open modal with item details
   function openModal(id) {
     const item = favorites.find(f => f.id === id);
     if (!item) return;
-    
+
     selectedItemId = id;
     modalTitle.textContent = item.name;
     modalImage.src = item.image;
     modalImage.alt = item.name;
-    
+
     actionModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
   }
-  
+
   // Close modal handler
   function closeModalHandler() {
     actionModal.classList.add('hidden');
     document.body.style.overflow = '';
     selectedItemId = null;
   }
-  
+
   // Show toast notification
   function showToast(message) {
     const toast = document.createElement('div');
     toast.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate__animated animate__fadeInUp';
     toast.textContent = message;
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.classList.remove('animate__fadeInUp');
       toast.classList.add('animate__fadeOutDown');
@@ -347,12 +352,12 @@
       }, 500);
     }, 2000);
   }
-  
+
   // Filter buttons functionality
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       activeFilter = btn.dataset.filter;
-      
+
       // Update active button styles
       filterButtons.forEach(b => {
         if (b.dataset.filter === activeFilter) {
@@ -363,11 +368,11 @@
           b.classList.add('bg-gray-100', 'dark:bg-gray-700');
         }
       });
-      
+
       updateFavorites();
     });
   });
-  
+
   // Event listeners
   closeModal.addEventListener('click', closeModalHandler);
   removeFromFavorites.addEventListener('click', () => {
@@ -375,10 +380,10 @@
       toggleFavorite(selectedItemId);
     }
   });
-  
+
   // Initialize the favorites display
   updateFavorites();
-  
+
   // Add sorting functionality for favorites
   document.addEventListener('DOMContentLoaded', () => {
     // Sorting animation
@@ -387,13 +392,13 @@
       { id: 'sortByPrice', label: 'Sort by Price: Low to High' },
       { id: 'sortByPriceDesc', label: 'Sort by Price: High to Low' }
     ];
-    
+
     let currentSortIndex = 0;
-    
+
     // Create sorting button
     const sortingContainer = document.createElement('div');
     sortingContainer.className = 'fixed bottom-24 right-4 z-40';
-    
+
     const sortingButton = document.createElement('button');
     sortingButton.className = 'bg-white dark:bg-gray-700 text-teal-600 dark:text-teal-400 p-3 rounded-full shadow-lg flex items-center justify-center';
     sortingButton.innerHTML = `
@@ -401,14 +406,14 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
       </svg>
     `;
-    
+
     sortingContainer.appendChild(sortingButton);
     document.body.appendChild(sortingContainer);
-    
+
     sortingButton.addEventListener('click', () => {
       currentSortIndex = (currentSortIndex + 1) % sortOrder.length;
       const { id } = sortOrder[currentSortIndex];
-      
+
       if (id === 'sortByName') {
         favorites.sort((a, b) => a.name.localeCompare(b.name));
       } else if (id === 'sortByPrice') {
@@ -416,10 +421,19 @@
       } else if (id === 'sortByPriceDesc') {
         favorites.sort((a, b) => b.price - a.price);
       }
-      
+
       updateFavorites();
       showToast(sortOrder[currentSortIndex].label);
     });
+  });
+
+  // Animation for elements
+  gsap.to('.slide-in', {
+    opacity: 1,
+    y: 0,
+    stagger: 0.1,
+    ease: 'power2.out',
+    duration: 0.6
   });
 </script>
 
