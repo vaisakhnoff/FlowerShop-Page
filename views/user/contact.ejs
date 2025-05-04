@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Anjali Flower Works</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .slide-in {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .form-field:focus-within label {
+            color: #14b8a6;
+            font-weight: 500;
+        }
+        .loading-animation {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .input-animated {
+            transition: all 0.3s ease;
+        }
+        .input-animated:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15);
+        }
+        .lottie-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-['Poppins']">
+    <!-- Header with animation -->
+    <header class="bg-white shadow-sm fixed top-0 w-full z-50 transition-all duration-300" id="header">
+        <div class="flex items-center justify-between p-4 max-w-3xl mx-auto">
+            <h1 class="text-xl font-bold text-teal-600 transition-colors duration-300 hover:text-teal-800">Contact Us</h1>
+            <div class="flex space-x-2">
+                <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                    🌙
+                </button>
+                <button id="backButton" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                    ↩️
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contact Options -->
+    <div class="mt-16 p-4 max-w-3xl mx-auto">
+        <!-- Quick Actions with hover effects -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <a href="tel:+918888888888" 
+               class="flex flex-col items-center p-4 bg-green-100 hover:bg-green-200 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1 slide-in">
+                <span class="text-3xl mb-2">📞</span>
+                <span class="font-semibold">Call Now</span>
+                <span class="text-sm text-gray-500 mt-1">+91 8888888888</span>
+            </a>
+            <a href="https://wa.me/918888888888" 
+               class="flex flex-col items-center p-4 bg-green-100 hover:bg-green-200 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1 slide-in">
+                <span class="text-3xl mb-2">💬</span>
+                <span class="font-semibold">WhatsApp</span>
+                <span class="text-sm text-gray-500 mt-1">Quick Response</span>
+            </a>
+        </div>
+
+        <!-- Contact Form with animated inputs -->
+        <form id="contactForm" class="bg-white rounded-xl p-6 shadow-sm slide-in">
+            <h2 class="text-lg font-semibold mb-4 flex items-center">
+                <span class="mr-2">Send us a message</span>
+                <span class="text-teal-500 text-sm" id="formStatus"></span>
+            </h2>
+            
+            <div class="mb-4 form-field relative">
+                <label class="block text-sm mb-1 transition-all duration-300">Your Name</label>
+                <input type="text" name="name" id="name"
+                       class="w-full p-3 border rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500 input-animated"
+                       required>
+                <span class="text-xs text-red-500 hidden" id="nameError">Please enter your name</span>
+            </div>
+
+            <div class="mb-4 form-field relative">
+                <label class="block text-sm mb-1 transition-all duration-300">Your Email</label>
+                <input type="email" name="email" id="email"
+                       class="w-full p-3 border rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500 input-animated"
+                       required>
+                <span class="text-xs text-red-500 hidden" id="emailError">Please enter a valid email address</span>
+            </div>
+
+            <div class="mb-4 form-field">
+                <label class="block text-sm mb-1 transition-all duration-300">Subject</label>
+                <select name="subject" id="subject"
+                       class="w-full p-3 border rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500 input-animated"
+                       required>
+                    <option value="">Select a subject</option>
+                    <option value="order">Order Inquiry</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="support">Customer Support</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="mb-4 form-field">
+                <label class="block text-sm mb-1 transition-all duration-300">Message</label>
+                <textarea name="message" id="message"
+                          class="w-full p-3 border rounded-lg focus:border-teal-500 focus:ring-1 focus:ring-teal-500 input-animated"
+                          rows="4" required></textarea>
+                <div class="flex justify-between mt-1">
+                    <span class="text-xs text-red-500 hidden" id="messageError">Please enter a message</span>
+                    <span class="text-xs text-gray-500" id="charCount">0/250</span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="flex items-center text-sm cursor-pointer">
+                    <input type="checkbox" class="w-4 h-4 mr-2 accent-teal-500" id="newsletter">
+                    <span>Subscribe to our newsletter for updates</span>
+                </label>
+            </div>
+
+            <button type="submit" id="submitBtn"
+                    class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transition-all duration-300 flex items-center justify-center">
+                <span>Send Message</span>
+            </button>
+        </form>
+
+        <!-- Success message - hidden by default -->
+        <div id="successMessage" class="hidden mt-4 bg-green-100 p-4 rounded-xl text-center slide-in">
+            <div class="lottie-container" id="successAnimation"></div>
+            <h3 class="text-lg font-semibold text-green-800">Message Sent Successfully!</h3>
+            <p class="text-green-700">We'll get back to you as soon as possible.</p>
+            <button id="sendAnother" class="mt-4 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors">
+                Send Another Message
+            </button>
+        </div>
+
+        <!-- Location with interactive map -->
+        <div class="mt-6 bg-white rounded-xl p-6 shadow-sm slide-in">
+            <h2 class="text-lg font-semibold mb-2">Visit Our Store</h2>
+            <div class="flex items-start">
+                <div class="mr-4 mt-1 text-teal-500 text-xl">📍</div>
+                <div>
+                    <p class="text-gray-600">123 Flower Street</p>
+                    <p class="text-gray-600">Bangalore, Karnataka</p>
+                    <p class="text-gray-500 text-sm mt-1">Open: Mon-Sat, 9AM-8PM</p>
+                </div>
+            </div>
+            
+            <div class="mt-4 rounded-lg overflow-hidden h-40 bg-gray-200">
+                <!-- Placeholder for map -->
+                <div id="map" class="w-full h-full flex items-center justify-center text-gray-500">
+                    Interactive Map Loading...
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <button id="directionsBtn" 
+                        class="border border-teal-500 text-teal-500 py-2 rounded-lg hover:bg-teal-50 transition-colors flex items-center justify-center">
+                    <span class="mr-2">🚗</span> Get Directions
+                </button>
+                <button id="shareLocationBtn"
+                        class="border border-teal-500 text-teal-500 py-2 rounded-lg hover:bg-teal-50 transition-colors flex items-center justify-center">
+                    <span class="mr-2">📤</span> Share Location
+                </button>
+            </div>
+        </div>
+        
+        <!-- FAQs with collapsible sections -->
+        <div class="mt-6 bg-white rounded-xl p-6 shadow-sm slide-in">
+            <h2 class="text-lg font-semibold mb-4">Frequently Asked Questions</h2>
+            
+            <div class="border-b pb-2">
+                <button class="faq-toggle w-full text-left font-medium flex justify-between items-center py-2">
+                    <span>What are your delivery hours?</span>
+                    <span class="transform transition-transform duration-300">▼</span>
+                </button>
+                <div class="faq-content hidden pt-2 pb-4 text-gray-600 text-sm">
+                    We deliver from 10AM to 7PM, seven days a week. For same-day delivery, please place your order before 2PM.
+                </div>
+            </div>
+            
+            <div class="border-b pb-2">
+                <button class="faq-toggle w-full text-left font-medium flex justify-between items-center py-2">
+                    <span>Do you offer custom arrangements?</span>
+                    <span class="transform transition-transform duration-300">▼</span>
+                </button>
+                <div class="faq-content hidden pt-2 pb-4 text-gray-600 text-sm">
+                    Yes! We love creating custom arrangements. Please call us directly or use the contact form to discuss your specific requirements.
+                </div>
+            </div>
+            
+            <div class="border-b pb-2">
+                <button class="faq-toggle w-full text-left font-medium flex justify-between items-center py-2">
+                    <span>What's your return policy?</span>
+                    <span class="transform transition-transform duration-300">▼</span>
+                </button>
+                <div class="faq-content hidden pt-2 pb-4 text-gray-600 text-sm">
+                    If you're not satisfied with your flowers upon delivery, please contact us within 24 hours and we'll make it right.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating action button -->
+    <div class="fixed bottom-24 right-4 z-40">
+        <button id="chatButton" class="bg-teal-500 hover:bg-teal-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center pulse">
+            <span class="text-2xl">💬</span>
+        </button>
+    </div>
+
+    <!-- Chat window (hidden by default) -->
+    <div id="chatWindow" class="fixed bottom-24 right-4 w-80 bg-white rounded-xl shadow-lg z-30 hidden">
+        <div class="p-4 bg-teal-500 text-white rounded-t-xl flex justify-between items-center">
+            <h3 class="font-medium">Chat with us</h3>
+            <button id="closeChat" class="text-white hover:text-gray-200">✖</button>
+        </div>
+        <div class="p-4 h-80 overflow-y-auto" id="chatMessages">
+            <div class="mb-3">
+                <div class="bg-gray-100 rounded-lg p-3 inline-block">
+                    Hi there! How can we help you today?
+                </div>
+            </div>
+        </div>
+        <div class="p-3 border-t">
+            <div class="flex gap-2">
+                <input type="text" id="chatInput" placeholder="Type your message..." 
+                      class="flex-1 p-2 border rounded-lg focus:border-teal-500 focus:outline-none">
+                <button id="sendChat" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="fixed bottom-0 w-full bg-white shadow-lg border-t z-20">
+        <div class="flex justify-around items-center p-3">
+            <a href="/" class="flex flex-col items-center text-gray-500">
+                <span class="text-xl">🏠</span>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="/catalog" class="flex flex-col items-center text-gray-500">
+                <span class="text-xl">🌷</span>
+                <span class="text-xs">Catalog</span>
+            </a>
+            <a href="/orders" class="flex flex-col items-center text-gray-500">
+                <span class="text-xl">📦</span>
+                <span class="text-xs">Orders</span>
+            </a>
+            <a href="/contact" class="flex flex-col items-center text-teal-500">
+                <span class="text-xl">📞</span>
+                <span class="text-xs">Contact</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Element references
+        const formFields = document.querySelectorAll('input, textarea, select');
+        const submitBtn = document.getElementById('submitBtn');
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+        const chatButton = document.getElementById('chatButton');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChat = document.getElementById('closeChat');
+        const sendChat = document.getElementById('sendChat');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageTextarea = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
+        const header = document.getElementById('header');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const faqToggles = document.querySelectorAll('.faq-toggle');
+        const sendAnother = document.getElementById('sendAnother');
+        const backButton = document.getElementById('backButton');
+        const directionsBtn = document.getElementById('directionsBtn');
+        const shareLocationBtn = document.getElementById('shareLocationBtn');
+        
+        // Animation for elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Slide in animations
+            gsap.to('.slide-in', {
+                opacity: 1,
+                y: 0,
+                stagger: 0.1,
+                ease: 'power2.out',
+                duration: 0.6
+            });
+
+            // Set up success animation
+            const successAnim = lottie.loadAnimation({
+                container: document.getElementById('successAnimation'),
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                path: 'https://assets1.lottiefiles.com/packages/lf20_uu0x8lqv.json' // Placeholder animation URL
+            });
+            
+            // Store animation for later use
+            window.successAnim = successAnim;
+        });
+
+        // Character counter for message
+        messageTextarea.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = `${length}/250`;
+            
+            if (length > 200) {
+                charCount.classList.add('text-orange-500');
+                charCount.classList.remove('text-gray-500', 'text-red-500');
+            } else if (length > 250) {
+                charCount.classList.add('text-red-500');
+                charCount.classList.remove('text-gray-500', 'text-orange-500');
+            } else {
+                charCount.classList.add('text-gray-500');
+                charCount.classList.remove('text-orange-500', 'text-red-500');
+            }
+        });
+
+        // Form submission with validation and animations
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset errors
+            document.querySelectorAll('.text-red-500').forEach(el => el.classList.add('hidden'));
+            
+            // Validate form
+            let valid = true;
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const messageInput = document.getElementById('message');
+            
+            if (!nameInput.value.trim()) {
+                document.getElementById('nameError').classList.remove('hidden');
+                nameInput.classList.add('shake');
+                setTimeout(() => nameInput.classList.remove('shake'), 500);
+                valid = false;
+            }
+            
+            if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
+                document.getElementById('emailError').classList.remove('hidden');
+                emailInput.classList.add('shake');
+                setTimeout(() => emailInput.classList.remove('shake'), 500);
+                valid = false;
+            }
+            
+            if (!messageInput.value.trim()) {
+                document.getElementById('messageError').classList.remove('hidden');
+                messageInput.classList.add('shake');
+                setTimeout(() => messageInput.classList.remove('shake'), 500);
+                valid = false;
+            }
+            
+            if (!valid) return;
+            
+            // Show sending animation
+            submitBtn.innerHTML = '<span>Sending</span><div class="loading-animation ml-2"></div>';
+            submitBtn.disabled = true;
+            document.getElementById('formStatus').textContent = "Processing...";
+
+            // Simulate sending (replace with actual API call)
+            setTimeout(() => {
+                // Hide form and show success message
+                gsap.to(contactForm, {
+                    opacity: 0,
+                    y: -20,
+                    duration: 0.5,
+                    onComplete: () => {
+                        contactForm.classList.add('hidden');
+                        successMessage.classList.remove('hidden');
+                        gsap.to(successMessage, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.5
+                        });
+                        // Play success animation
+                        if (window.successAnim) {
+                            window.successAnim.goToAndPlay(0, true);
+                        }
+                    }
+                });
+            }, 2000);
+        });
+
+        // Send another message button
+        sendAnother.addEventListener('click', function() {
+            // Reset form
+            contactForm.reset();
+            charCount.textContent = '0/250';
+            
+            // Hide success and show form
+            gsap.to(successMessage, {
+                opacity: 0,
+                y: -20,
+                duration: 0.5,
+                onComplete: () => {
+                    successMessage.classList.add('hidden');
+                    contactForm.classList.remove('hidden');
+                    gsap.to(contactForm, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.5
+                    });
+                    // Reset button
+                    submitBtn.innerHTML = '<span>Send Message</span>';
+                    submitBtn.disabled = false;
+                    document.getElementById('formStatus').textContent = "";
+                }
+            });
+        });
+
+        // Scroll behavior for header
+        let lastScroll = 0;
+        window.addEventListener('scroll', function() {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                // Scrolling down
+                header.classList.add('transform');
+                header.classList.add('-translate-y-full');
+            } else {
+                // Scrolling up
+                header.classList.remove('-translate-y-full');
+            }
+            lastScroll = currentScroll;
+        });
+
+        // Chat functionality
+        chatButton.addEventListener('click', function() {
+            chatWindow.classList.toggle('hidden');
+            chatButton.classList.toggle('pulse');
+        });
+
+        closeChat.addEventListener('click', function() {
+            chatWindow.classList.add('hidden');
+            chatButton.classList.add('pulse');
+        });
+
+        sendChat.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'mb-3 text-right';
+            userMsgDiv.innerHTML = `
+                <div class="bg-teal-100 rounded-lg p-3 inline-block">
+                    ${message}
+                </div>
+            `;
+            chatMessages.appendChild(userMsgDiv);
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Simulate response (replace with actual chatbot logic)
+            setTimeout(() => {
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'mb-3';
+                
+                // Different responses based on message content
+                let response = "Thank you for your message! We'll get back to you soon.";
+                
+                if (message.toLowerCase().includes('hour') || message.toLowerCase().includes('time')) {
+                    response = "We're open Monday to Saturday, 9AM to 8PM.";
+                } else if (message.toLowerCase().includes('delivery')) {
+                    response = "We deliver across Bangalore. Delivery charges may apply based on your location.";
+                } else if (message.toLowerCase().includes('payment')) {
+                    response = "We accept all major credit cards, UPI, and cash on delivery.";
+                }
+                
+                responseDiv.innerHTML = `
+                    <div class="bg-gray-100 rounded-lg p-3 inline-block">
+                        ${response}
+                    </div>
+                `;
+                chatMessages.appendChild(responseDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        }
+
+        // Dark mode toggle
+        let darkMode = false;
+        darkModeToggle.addEventListener('click', function() {
+            darkMode = !darkMode;
+            
+            if (darkMode) {
+                document.body.classList.add('bg-gray-900');
+                document.body.classList.remove('bg-gray-50');
+                document.querySelectorAll('.bg-white').forEach(el => {
+                    el.classList.remove('bg-white');
+                    el.classList.add('bg-gray-800');
+                });
+                document.querySelectorAll('.text-gray-600, .text-gray-500').forEach(el => {
+                    el.classList.add('text-gray-300');
+                });
+                darkModeToggle.innerHTML = '☀️';
+            } else {
+                document.body.classList.remove('bg-gray-900');
+                document.body.classList.add('bg-gray-50');
+                document.querySelectorAll('.bg-gray-800').forEach(el => {
+                    el.classList.add('bg-white');
+                    el.classList.remove('bg-gray-800');
+                });
+                document.querySelectorAll('.text-gray-300').forEach(el => {
+                    el.classList.remove('text-gray-300');
+                });
+                darkModeToggle.innerHTML = '🌙';
+            }
+        });
+
+        // Back button functionality
+        backButton.addEventListener('click', function() {
+            window.history.back();
+        });
+
+        // FAQ toggles
+        faqToggles.forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const arrow = this.querySelector('span:last-child');
+                
+                // Toggle content visibility
+                content.classList.toggle('hidden');
+                
+                // Rotate arrow
+                if (content.classList.contains('hidden')) {
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    arrow.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Map functionality
+        directionsBtn.addEventListener('click', function() {
+            window.open('https://maps.google.com?q=123+Flower+Street+Bangalore+Karnataka');
+        });
+
+        shareLocationBtn.addEventListener('click', function() {
+            // Create a shareable link with the location
+            const locationText = "Anjali Flower Works: 123 Flower Street, Bangalore, Karnataka";
+            const shareUrl = `https://maps.google.com?q=123+Flower+Street+Bangalore+Karnataka`;
+            
+            // Use Web Share API if available
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Anjali Flower Works',
+                    text: locationText,
+                    url: shareUrl
+                })
+                .catch(console.error);
+            } else {
+                // Fallback - copy to clipboard
+                const tempInput = document.createElement('input');
+                document.body.appendChild(tempInput);
+                tempInput.value = `${locationText} - ${shareUrl}`;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                
+                // Show copied notification
+                alert('Location copied to clipboard!');
+            }
+        });
+
+        // Form fields animation on focus
+        formFields.forEach(field => {
+            field.addEventListener('focus', function() {
+                this.closest('.form-field')?.classList.add('transform');
+            });
+            
+            field.addEventListener('blur', function() {
+                this.closest('.form-field')?.classList.remove('transform');
+            });
+        });
+
+        // Simulated map loading
+        setTimeout(() => {
+            document.getElementById('map').innerHTML = `
+                <div class="w-full h-full bg-gray-300 relative overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-6 h-6 bg-teal-500 rounded-full animate-ping"></div>
+                    </div>
+                    <div class="absolute bottom-2 right-2 text-xs text-gray-600 bg-white px-2 py-1 rounded">
+                        Map View
+                    </div>
+                </div>
+            `;
+        }, 1500);
+    </script>
+</body>
+</html>

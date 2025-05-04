@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Anjali Flower Works</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.10.2/lottie.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .category-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .category-card:hover {
+            transform: translateY(-5px) rotate(2deg);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .category-card:active {
+            transform: scale(0.95);
+        }
+        .search-container {
+            position: relative;
+            z-index: 60;
+        }
+        .search-results {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .search-results.active {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .category-tag {
+            transition: all 0.2s ease;
+        }
+        .category-tag:hover {
+            transform: translateY(-2px);
+        }
+        .category-badge {
+            transform: rotate(-10deg);
+            animation: badge-pulse 2s infinite;
+        }
+        @keyframes badge-pulse {
+            0% { transform: rotate(-10deg) scale(1); }
+            50% { transform: rotate(-10deg) scale(1.1); }
+            100% { transform: rotate(-10deg) scale(1); }
+        }
+        .slide-in {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .featured-category {
+            background-size: 200% 200%;
+            animation: gradient-shift 5s ease infinite;
+        }
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .scroll-indicator {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .dark-mode {
+            transition: all 0.3s ease;
+        }
+        .popular-badge {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-['Poppins'] transition-colors duration-300">
+    <!-- Header with Search -->
+    <header class="bg-white shadow-sm fixed top-0 w-full z-50 transition-all duration-300" id="header">
+        <div class="p-4 max-w-3xl mx-auto">
+            <div class="flex items-center justify-between mb-3">
+                <h1 class="text-xl font-bold text-teal-600">Categories</h1>
+                <div class="flex gap-2">
+                    <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                        🌙
+                    </button>
+                    <button id="layoutToggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                        📱
+                    </button>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <div class="relative">
+                    <input type="text" id="searchInput"
+                        placeholder="Search categories..."
+                        class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-200 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all">
+                    <span class="absolute left-3 top-3.5">🔍</span>
+                    <button id="clearSearch" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600 hidden">✖</button>
+                </div>
+                
+                <div id="searchResults" class="search-results absolute w-full bg-white mt-2 rounded-xl shadow-lg z-50 border border-gray-100">
+                    <div class="p-4">
+                        <div class="flex items-center justify-between border-b pb-2 mb-2">
+                            <span class="font-medium">Search Results</span>
+                            <span id="resultCount" class="text-sm text-gray-500">0 items</span>
+                        </div>
+                        <div id="resultsList">
+                            <!-- Search results will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Popular Tags -->
+    <div class="mt-36 px-4 max-w-3xl mx-auto slide-in">
+        <div class="flex items-center mb-2">
+            <h2 class="text-sm font-medium text-gray-500">Popular Tags</h2>
+            <div class="ml-2 text-xs bg-teal-500 text-white px-2 py-0.5 rounded-full">New</div>
+        </div>
+        <div class="flex flex-wrap gap-2 pb-2 overflow-x-auto" id="tagContainer">
+            <span class="category-tag bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Roses</span>
+            <span class="category-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Birthday</span>
+            <span class="category-tag bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Indoor Plants</span>
+            <span class="category-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Wedding</span>
+            <span class="category-tag bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Exotic</span>
+            <span class="category-tag bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Anniversary</span>
+            <span class="category-tag bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap">Orchids</span>
+        </div>
+        <div class="scroll-indicator text-center text-gray-400 text-xs mt-1">
+            <span>scroll →</span>
+        </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="mt-4 p-4 max-w-3xl mx-auto" id="categoriesContainer">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-lg font-semibold">All Categories</h2>
+            <div class="text-sm text-teal-600" id="categoryCount">8 categories</div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4" id="categoryGrid">
+            <div class="category-card bg-pink-100 p-6 rounded-xl text-center cursor-pointer" data-id="bouquets" data-items="20">
+                <div class="relative">
+                    <span class="text-4xl block mb-2">💐</span>
+                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full popular-badge">Popular</span>
+                </div>
+                <h3 class="font-semibold">Bouquets</h3>
+                <p class="text-xs text-gray-600 mt-1">20 items</p>
+            </div>
+            
+            <div class="category-card bg-green-100 p-6 rounded-xl text-center cursor-pointer" data-id="plants" data-items="15">
+                <span class="text-4xl block mb-2">🌿</span>
+                <h3 class="font-semibold">Indoor Plants</h3>
+                <p class="text-xs text-gray-600 mt-1">15 items</p>
+            </div>
+            
+            <div class="category-card bg-blue-100 p-6 rounded-xl text-center cursor-pointer" data-id="birthdays" data-items="12">
+                <span class="text-4xl block mb-2">🎂</span>
+                <h3 class="font-semibold">Birthday Specials</h3>
+                <p class="text-xs text-gray-600 mt-1">12 items</p>
+            </div>
+            
+            <div class="category-card bg-purple-100 p-6 rounded-xl text-center cursor-pointer" data-id="weddings" data-items="18">
+                <span class="text-4xl block mb-2">💍</span>
+                <h3 class="font-semibold">Wedding Collection</h3>
+                <p class="text-xs text-gray-600 mt-1">18 items</p>
+            </div>
+            
+            <div class="category-card bg-yellow-100 p-6 rounded-xl text-center cursor-pointer" data-id="exotic" data-items="8">
+                <span class="text-4xl block mb-2">🌺</span>
+                <h3 class="font-semibold">Exotic Flowers</h3>
+                <p class="text-xs text-gray-600 mt-1">8 items</p>
+            </div>
+            
+            <div class="category-card bg-red-100 p-6 rounded-xl text-center cursor-pointer" data-id="roses" data-items="10">
+                <span class="text-4xl block mb-2">🌹</span>
+                <h3 class="font-semibold">Roses</h3>
+                <p class="text-xs text-gray-600 mt-1">10 items</p>
+            </div>
+            
+            <div class="category-card bg-indigo-100 p-6 rounded-xl text-center cursor-pointer" data-id="corporate" data-items="5">
+                <span class="text-4xl block mb-2">🏢</span>
+                <h3 class="font-semibold">Corporate Events</h3>
+                <p class="text-xs text-gray-600 mt-1">5 items</p>
+            </div>
+            
+            <div class="category-card bg-orange-100 p-6 rounded-xl text-center cursor-pointer" data-id="gifts" data-items="14">
+                <span class="text-4xl block mb-2">🎁</span>
+                <h3 class="font-semibold">Gift Hampers</h3>
+                <p class="text-xs text-gray-600 mt-1">14 items</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Category -->
+    <div class="mt-6 p-4 max-w-3xl mx-auto slide-in">
+        <h2 class="text-lg font-semibold mb-3">Featured Collection</h2>
+        <div class="bg-gradient-to-r from-teal-500 to-blue-500 rounded-xl p-6 text-white featured-category">
+            <div class="relative">
+                <span class="absolute -top-3 -left-3 bg-yellow-400 text-yellow-800 text-xs font-bold px-2 py-1 rounded-lg rotate-12 category-badge">
+                    20% OFF
+                </span>
+                <h3 class="text-xl font-bold">Wedding Collection</h3>
+                <p class="mt-2 text-sm opacity-90">Special arrangements for your special day</p>
+                <div class="flex mt-4 justify-between items-center">
+                    <button class="bg-white text-teal-500 px-6 py-2 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
+                        Explore Now
+                    </button>
+                    <div class="text-xs bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                        Limited Time Offer
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recently Viewed -->
+    <div class="mt-6 p-4 max-w-3xl mx-auto slide-in">
+        <h2 class="text-lg font-semibold mb-3">Recently Viewed</h2>
+        <div class="bg-white rounded-xl p-4 shadow-sm">
+            <div class="flex overflow-x-auto gap-3 pb-2" id="recentlyViewed">
+                <!-- Empty state -->
+                <div class="flex flex-col items-center justify-center w-full py-6 text-gray-400" id="emptyState">
+                    <span class="text-xl mb-2">👀</span>
+                    <p class="text-sm">No recently viewed categories</p>
+                </div>
+                
+                <!-- Recently viewed items will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Seasonal Picks -->
+    <div class="mt-6 p-4 max-w-3xl mx-auto mb-24 slide-in">
+        <h2 class="text-lg font-semibold mb-3">Seasonal Picks</h2>
+        <div class="relative bg-gradient-to-r from-red-500 to-orange-500 rounded-xl p-6 text-white overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 opacity-10">
+                <div class="w-full h-full rotate-45 border-8 border-white rounded-full"></div>
+            </div>
+            <h3 class="text-xl font-bold">Summer Blooms</h3>
+            <p class="mt-2 text-sm opacity-90">Fresh and vibrant colors for the season</p>
+            <div class="flex gap-2 mt-4">
+                <span class="bg-white bg-opacity-20 text-xs px-2 py-1 rounded-full">Sunflowers</span>
+                <span class="bg-white bg-opacity-20 text-xs px-2 py-1 rounded-full">Daisies</span>
+                <span class="bg-white bg-opacity-20 text-xs px-2 py-1 rounded-full">Lilies</span>
+            </div>
+            <button class="mt-4 bg-white text-red-500 px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
+                View Collection
+            </button>
+        </div>
+    </div>
+
+    <!-- Category Detail Modal (hidden by default) -->
+    <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-xl mx-4 w-full max-w-md overflow-hidden">
+            <div class="bg-gradient-to-r from-teal-500 to-blue-500 p-6 text-white relative">
+                <button id="closeModal" class="absolute top-4 right-4 text-white hover:text-gray-200">✖</button>
+                <div id="modalIcon" class="text-5xl mb-2">💐</div>
+                <h3 id="modalTitle" class="text-2xl font-bold">Category Name</h3>
+                <p id="modalItemCount" class="text-sm opacity-90">0 items</p>
+            </div>
+            <div class="p-6">
+                <div id="modalDescription" class="text-gray-600 mb-4">
+                    Explore our beautiful collection of handcrafted items.
+                </div>
+                <div class="mb-6">
+                    <h4 class="font-medium mb-2">Popular in this category:</h4>
+                    <div id="modalPopular" class="grid grid-cols-2 gap-2">
+                        <!-- Popular items will be added here -->
+                    </div>
+                </div>
+                <button id="viewAllButton" class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transition-colors">
+                    View All Items
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="fixed bottom-0 w-full bg-white shadow-lg border-t z-20">
+        <div class="flex justify-around items-center p-3">
+            <a href="/" class="flex flex-col items-center text-gray-500">
+                <span class="text-xl">🏠</span>
+                <span class="text-xs">Home</span>
+            </a>
+            <a href="/catalog" class="flex flex-col items-center text-gray-500">
+                <span class="text-xl">🌷</span>
+                <span class="text-xs">Catalog</span>
+            </a>
+            <a href="/categories" class="flex flex-col items-center text-teal-500">
+                <span class="text-xl">📋</span>
+                <span class="text-xs">Categories</span>
+            </a>
+            <a href="/contact" class="flex flex-col items-center text-gray-500">
+                <span class="text-xl">📞</span>
+                <span class="text-xs">Contact</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Wait for DOM content to be loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const clearSearch = document.getElementById('clearSearch');
+            const resultsList = document.getElementById('resultsList');
+            const resultCount = document.getElementById('resultCount');
+            const categoryCards = document.querySelectorAll('.category-card');
+            const categoryGrid = document.getElementById('categoryGrid');
+            const recentlyViewed = document.getElementById('recentlyViewed');
+            const emptyState = document.getElementById('emptyState');
+            const tagContainer = document.getElementById('tagContainer');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const layoutToggle = document.getElementById('layoutToggle');
+            const categoryModal = document.getElementById('categoryModal');
+            const closeModal = document.getElementById('closeModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalItemCount = document.getElementById('modalItemCount');
+            const modalPopular = document.getElementById('modalPopular');
+            const viewAllButton = document.getElementById('viewAllButton');
+            
+            // Animation for elements
+            gsap.to('.slide-in', {
+                opacity: 1,
+                y: 0,
+                stagger: 0.1,
+                ease: 'power2.out',
+                duration: 0.6
+            });
+            
+            gsap.to('.category-card', {
+                opacity: 1,
+                y: 0,
+                stagger: 0.05,
+                ease: 'power2.out',
+                duration: 0.6
+            });
+            
+            // Initialize variables
+            let isGridView = true;
+            let darkMode = false;
+            let recentlyViewedItems = [];
+            
+            // Category data
+            const categoryData = [
+                {
+                    id: 'bouquets',
+                    name: 'Bouquets',
+                    icon: '💐',
+                    items: 20,
+                    color: 'bg-pink-100',
+                    description: 'Elegant bouquets perfect for any occasion. Our hand-crafted arrangements feature the freshest seasonal flowers.',
+                    popular: ['Red Rose Bouquet', 'Mixed Flower Arrangement', 'Sunflower Surprise', 'Birthday Special']
+                },
+                {
+                    id: 'plants',
+                    name: 'Indoor Plants',
+                    icon: '🌿',
+                    items: 15,
+                    color: 'bg-green-100',
+                    description: 'Bring nature into your home with our selection of beautiful indoor plants. Easy to maintain and perfect for any space.',
+                    popular: ['Peace Lily', 'Snake Plant', 'Money Plant', 'Aloe Vera']
+                },
+                {
+                    id: 'birthdays',
+                    name: 'Birthday Specials',
+                    icon: '🎂',
+                    items: 12,
+                    color: 'bg-blue-100',
+                    description: 'Make birthdays extra special with our festive flower arrangements, bouquets, and gift hampers.',
+                    popular: ['Birthday Balloon Bouquet', 'Deluxe Birthday Box', 'Chocolate Flower Combo', 'Birthday Surprise']
+                },
+                {
+                    id: 'weddings',
+                    name: 'Wedding Collection',
+                    icon: '💍',
+                    items: 18,
+                    color: 'bg-purple-100',
+                    description: 'Beautiful arrangements for your special day. From bridal bouquets to venue decorations.',
+                    popular: ['Bridal Bouquet', 'Wedding Centerpiece', 'Venue Decoration', 'Boutonniere Sets']
+                },
+                {
+                    id: 'exotic',
+                    name: 'Exotic Flowers',
+                    icon: '🌺',
+                    items: 8,
+                    color: 'bg-yellow-100',
+                    description: 'Rare and exotic flowers from around the world. Perfect for those looking for something unique.',
+                    popular: ['Orchid Collection', 'Bird of Paradise', 'Protea Arrangement', 'Tropical Mix']
+                },
+                {
+                    id: 'roses',
+                    name: 'Roses',
+                    icon: '🌹',
+                    items: 10,
+                    color: 'bg-red-100',
+                    description: 'Classic and timeless rose arrangements in various colors and styles. Perfect for expressing love.',
+                    popular: ['Red Rose Dozen', 'Rainbow Rose Box', 'Long Stem Roses', 'Rose Teddy Combo']
+                },
+                {
+                    id: 'corporate',
+                    name: 'Corporate Events',
+                    icon: '🏢',
+                    items: 5,
+                    color: 'bg-indigo-100',
+                    description: 'Professional floral arrangements for corporate events, conferences, and office decoration.',
+                    popular: ['Office Desk Plants', 'Event Centerpieces', 'Reception Arrangements', 'Gift Hampers']
+                },
+                {
+                    id: 'gifts',
+                    name: 'Gift Hampers',
+                    icon: '🎁',
+                    items: 14,
+                    color: 'bg-orange-100',
+                    description: 'Thoughtful gift combinations featuring flowers, chocolates, teddy bears, and more.',
+                    popular: ['Chocolate Lover Box', 'Teddy & Flowers', 'Wine & Roses', 'Premium Gift Basket']
+                }
+            ];
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                
+                if (query.length > 0) {
+                    clearSearch.classList.remove('hidden');
+                    
+                    // Filter categories
+                    const results = categoryData.filter(category => 
+                        category.name.toLowerCase().includes(query) || 
+                        category.description.toLowerCase().includes(query)
+                    );
+                    
+                    // Update results
+                    resultCount.textContent = `${results.length} items`;
+                    resultsList.innerHTML = '';
+                    
+                    if (results.length === 0) {
+                        resultsList.innerHTML = `
+                            <div class="text-center py-4 text-gray-500">
+                                <p>No categories found</p>
+                            </div>
+                        `;
+                    } else {
+                        results.forEach(category => {
+                            const resultItem = document.createElement('div');
+                            resultItem.className = 'flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer mb-1';
+                            resultItem.innerHTML = `
+                                <div class="w-8 h-8 ${category.color} rounded-full flex items-center justify-center mr-3">
+                                    <span>${category.icon}</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">${category.name}</h4>
+                                    <p class="text-xs text-gray-500">${category.items} items</p>
+                                </div>
+                            `;
+                            resultItem.addEventListener('click', () => {
+                                showCategoryDetails(category.id);
+                                searchResults.classList.remove('active');
+                                searchInput.value = '';
+                                clearSearch.classList.add('hidden');
+                            });
+                            resultsList.appendChild(resultItem);
+                        });
+                    }
+                    
+                    searchResults.classList.add('active');
+                } else {
+                    clearSearch.classList.add('hidden');
+                    searchResults.classList.remove('active');
+                }
+            });
+            
+            // Clear search
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                searchResults.classList.remove('active');
+                this.classList.add('hidden');
+                searchInput.focus();
+            });
+            
+            // Close search results when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+                    searchResults.classList.remove('active');
+                }
+            });
+            
+            // Handle category card click
+            categoryCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const categoryId = this.dataset.id;
+                    showCategoryDetails(categoryId);
+                    addToRecentlyViewed(categoryId);
+                });
+            });
+            
+            // Show category details in modal
+            function showCategoryDetails(categoryId) {
+                const category = categoryData.find(cat => cat.id === categoryId);
+                
+                if (category) {
+                    // Update modal with category details
+                    modalTitle.textContent = category.name;
+                    modalIcon.textContent = category.icon;
+                    modalItemCount.textContent = `${category.items} items`;
+                    document.getElementById('modalDescription').textContent = category.description;
+                    
+                    // Show popular items
+                    modalPopular.innerHTML = '';
+                    category.popular.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'bg-gray-100 p-2 rounded text-sm';
+                        itemDiv.textContent = item;
+                        modalPopular.appendChild(itemDiv);
+                    });
+                    
+                    // Set view all button action
+                    viewAllButton.onclick = function() {
+                        // Navigate to category page
+                        alert(`Navigating to ${category.name} category page`);
+                        categoryModal.classList.add('hidden');
+                    };
+                    
+                    // Show modal with animation
+                    categoryModal.classList.remove('hidden');
+                    gsap.fromTo(categoryModal.querySelector('.bg-white'), 
+                        { opacity: 0, y: 50 },
+                        { opacity: 1, y: 0, duration: 0.3 }
+                    );
+                }
+            }
+            
+            // Close modal
+            closeModal.addEventListener('click', function() {
+                gsap.to(categoryModal.querySelector('.bg-white'), {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.2,
+                    onComplete: () => {
+                        categoryModal.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Add to recently viewed
+            function addToRecentlyViewed(categoryId) {
+                // Skip if already in recently viewed
+                if (recentlyViewedItems.includes(categoryId)) {
+                    // Move to front of array
+                    recentlyViewedItems = recentlyViewedItems.filter(id => id !== categoryId);
+                    recentlyViewedItems.unshift(categoryId);
+                } else {
+                    // Add to front of array
+                    recentlyViewedItems.unshift(categoryId);
+                    // Keep only 5 items
+                    if (recentlyViewedItems.length > 5) {
+                        recentlyViewedItems.pop();
+                    }
+                }
+                
+                // Save to local storage
+                localStorage.setItem('recentlyViewedCategories', JSON.stringify(recentlyViewedItems));
+                
+                // Update UI
+                updateRecentlyViewed();
+            }
+            
+            // Update recently viewed UI
+            function updateRecentlyViewed() {
+                // Clear current items
+                recentlyViewed.innerHTML = '';
+                
+                if (recentlyViewedItems.length === 0) {
+                    recentlyViewed.appendChild(emptyState);
+                    return;
+                }
+                
+                // Add items
+                recentlyViewedItems.forEach(categoryId => {
+                    const category = categoryData.find(cat => cat.id === categoryId);
+                    
+                    if (category) {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = `flex-shrink-0 ${category.color} p-3 rounded-xl text-center cursor-pointer w-20`;
+                        itemDiv.innerHTML = `
+                            <span class="text-2xl block">${category.icon}</span>
+                            <p class="text-xs font-medium mt-1 truncate">${category.name}</p>
+                        `;
+                        itemDiv.addEventListener('click', () => {
+                            showCategoryDetails(category.id);
+                        });
+                        recentlyViewed.appendChild(itemDiv);
+                    }
+                });
+            }
+            
+            // Handle layout toggle
+            layoutToggle.addEventListener('click', function() {
+                isGridView = !isGridView;
+                
+                if (isGridView) {
+                    categoryGrid.classList.remove('grid-cols-1');
+                    categoryGrid.classList.add('grid-cols-2');
+                } else {
+                    categoryGrid.classList.remove('grid-cols-2');
+                    categoryGrid.classList.add('grid-cols-1');
+                }
+                
+                // Update toggle button icon
+                this.textContent = isGridView ? '📱' : '📋';
+            });
+
+            // Handle dark mode toggle
+            darkModeToggle.addEventListener('click', function() {
+                darkMode = !darkMode;
+                document.body.classList.toggle('dark-mode');
+                
+                if (darkMode) {
+                    document.body.classList.add('bg-gray-900', 'text-white');
+                    this.textContent = '☀️';
+                } else {
+                    document.body.classList.remove('bg-gray-900', 'text-white');
+                    this.textContent = '🌙';
+                }
+            });
+
+            // Handle tag clicks
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const tagText = this.textContent.toLowerCase();
+                    searchInput.value = tagText;
+                    searchInput.dispatchEvent(new Event('input'));
+                });
+            });
+
+            // Close modal when clicking outside
+            categoryModal.addEventListener('click', function(event) {
+                if (event.target === this) {
+                    gsap.to(this.querySelector('.bg-white'), {
+                        opacity: 0,
+                        y: 50,
+                        duration: 0.2,
+                        onComplete: () => {
+                            this.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+
+            // Load recently viewed from localStorage
+            const savedRecentlyViewed = localStorage.getItem('recentlyViewedCategories');
+            if (savedRecentlyViewed) {
+                recentlyViewedItems = JSON.parse(savedRecentlyViewed);
+                updateRecentlyViewed();
+            }
+
+            // Initialize animations
+            const header = document.getElementById('header');
+            let lastScroll = 0;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+
+                if (currentScroll > lastScroll && currentScroll > 100) {
+                    // Scrolling down
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scrolling up
+                    header.style.transform = 'translateY(0)';
+                }
+
+                lastScroll = currentScroll;
+            });
+
+            // Handle scroll in tag container
+            const scrollSpeed = 10;
+            let isScrolling = false;
+
+            tagContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                
+                if (!isScrolling) {
+                    isScrolling = true;
+                    
+                    const direction = e.deltaY > 0 ? 1 : -1;
+                    tagContainer.scrollLeft += scrollSpeed * direction;
+                    
+                    setTimeout(() => {
+                        isScrolling = false;
+                    }, 10);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<nav class="fixed bottom-0 left-0 w-full bg-white border-t flex justify-around items-center py-3">
+    <a href="/" class="flex flex-col items-center <%= active === 'home' ? 'text-teal-500' : 'text-gray-400' %>">
+        <span>🏠</span>
+        <span class="text-xs">Home</span>
+    </a>
+    <a href="/categories" class="flex flex-col items-center <%= active === 'categories' ? 'text-teal-500' : 'text-gray-400' %>">
+        <span>📁</span>
+        <span class="text-xs">Categories</span>
+    </a>
+    <a href="/favorites" class="flex flex-col items-center <%= active === 'favorites' ? 'text-teal-500' : 'text-gray-400' %>">
+        <span>❤️</span>
+        <span class="text-xs">Favorites</span>
+    </a>
+    <a href="/contact" class="flex flex-col items-center <%= active === 'categories' ? 'text-teal-500' : 'text-gray-400' %>">
+        <span>📞</span>
+        <span class="text-xs">Contact</span>
+    </a>
+</nav>

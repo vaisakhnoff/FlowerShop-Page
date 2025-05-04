@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorites - Anjali Flower Works</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .favorite-animation {
+      animation: heartBeat 1.2s;
+    }
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.3); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.3); }
+      70% { transform: scale(1); }
+    }
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .heart-empty {
+      background: linear-gradient(to bottom, #ffffff 0%, #ffffff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+    }
+    .heart-filled {
+      background: linear-gradient(to bottom, #ff6b6b 0%, #ee0979 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-900 dark:bg-gray-800 dark:text-white pb-20">
+
+<!-- Header -->
+<header class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+  <div class="flex items-center space-x-3">
+    <a href="index.html" class="flex items-center">
+      <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </a>
+    <div class="flex items-center space-x-2">
+      <svg class="w-8 h-8 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+      </svg>
+      <h1 class="text-xl font-bold logo-text tracking-wide text-teal-600 dark:text-teal-400">My Favorites</h1>
+    </div>
+  </div>
+  <div class="flex items-center space-x-1">
+    <span id="favCount" class="animate__animated animate__heartBeat text-xl px-2 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white flex items-center justify-center">
+      <span class="heart-icon mr-1">❤️</span>
+      <span class="counter">0</span>
+    </span>
+  </div>
+</header>
+
+<!-- Favorites Filter -->
+<div class="flex overflow-x-auto whitespace-nowrap px-4 py-3 space-x-3 bg-white dark:bg-gray-800 shadow-sm">
+  <button class="filter-btn px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-full transition-colors duration-300" data-filter="all">All</button>
+  <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="indoor">Indoor</button>
+  <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="outdoor">Outdoor</button>
+  <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="wedding">Wedding</button>
+</div>
+
+<!-- Favorites Grid -->
+<div class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="favoritesGrid">
+  <!-- Favorite items will be dynamically added here -->
+</div>
+
+<!-- Empty State -->
+<div id="emptyState" class="hidden flex flex-col items-center justify-center py-16 px-4">
+  <div class="animate__animated animate__fadeIn">
+    <div class="mb-6 p-4 bg-pink-50 dark:bg-gray-700 rounded-full">
+      <svg class="w-16 h-16 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+      </svg>
+    </div>
+    <h3 class="text-xl font-medium text-center mb-2">Your favorites list is empty</h3>
+    <p class="text-gray-500 dark:text-gray-400 text-center mb-8">Start adding items you love to your favorites</p>
+    <a href="index.html" class="inline-block px-8 py-3 bg-gradient-to-r from-teal-500 to-teal-400 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      Browse Flowers
+    </a>
+  </div>
+</div>
+
+<!-- Favorite Actions Modal -->
+<div id="actionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl w-11/12 max-w-md animate__animated animate__zoomIn">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold" id="modalTitle">Flower Name</h3>
+      <button id="closeModal" class="text-2xl">&times;</button>
+    </div>
+    <div class="flex justify-center py-4">
+      <img id="modalImage" class="h-40 object-contain rounded" src="/api/placeholder/200/200" alt="flower">
+    </div>
+    <div class="flex flex-col space-y-3 mt-2">
+      <a href="#" id="viewDetails" class="bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg text-center transition-colors duration-300">
+        View Details
+      </a>
+      <a href="https://wa.me/918888888888" target="_blank" class="bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-center transition-colors duration-300 flex items-center justify-center">
+        <span class="mr-2">Contact on WhatsApp</span>
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </a>
+      <button id="removeFromFavorites" class="bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-center transition-colors duration-300">
+        Remove from Favorites
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 flex justify-around items-center py-3 shadow-lg">
+  <a href="index.html" class="flex flex-col items-center">
+    <span>🏠</span>
+    <span class="text-xs">Home</span>
+  </a>
+  <a href="#" class="flex flex-col items-center">
+    <span>📁</span>
+    <span class="text-xs">Categories</span>
+  </a>
+  <a href="#" class="flex flex-col items-center text-teal-500">
+    <span>❤️</span>
+    <span class="text-xs">Favorites</span>
+  </a>
+  <a href="#" class="flex flex-col items-center">
+    <span>📞</span>
+    <span class="text-xs">Contact</span>
+  </a>
+</nav>
+
+<script>
+  // Sample favorites data
+  let favorites = [
+    { 
+      id: 1, 
+      name: 'Red Roses', 
+      price: 29.99, 
+      category: 'wedding',
+      image: '/api/placeholder/300/300', 
+      tags: ['popular', 'fresh']
+    },
+    { 
+      id: 2, 
+      name: 'Tulips', 
+      price: 19.99, 
+      category: 'indoor',
+      image: '/api/placeholder/300/300', 
+      tags: ['seasonal']
+    },
+    { 
+      id: 3, 
+      name: 'Orchids', 
+      price: 39.99, 
+      category: 'indoor',
+      image: '/api/placeholder/300/300', 
+      tags: ['premium', 'limited']
+    },
+    { 
+      id: 4, 
+      name: 'Oak Tree', 
+      price: 68.50, 
+      category: 'outdoor',
+      image: '/api/placeholder/300/300', 
+      tags: ['popular']
+    }
+  ];
+  
+  // Get DOM elements
+  const favoritesGrid = document.getElementById('favoritesGrid');
+  const emptyState = document.getElementById('emptyState');
+  const favCount = document.getElementById('favCount');
+  const actionModal = document.getElementById('actionModal');
+  const closeModal = document.getElementById('closeModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalImage = document.getElementById('modalImage');
+  const removeFromFavorites = document.getElementById('removeFromFavorites');
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  
+  let activeFilter = 'all';
+  let selectedItemId = null;
+
+  // Update favorites display
+  function updateFavorites() {
+    const filteredFavorites = activeFilter === 'all' 
+      ? favorites 
+      : favorites.filter(item => item.category === activeFilter);
+    
+    favCount.querySelector('.counter').textContent = favorites.length;
+    
+    if (favorites.length === 0) {
+      favoritesGrid.classList.add('hidden');
+      emptyState.classList.remove('hidden');
+      return;
+    }
+    
+    favoritesGrid.classList.remove('hidden');
+    emptyState.classList.add('hidden');
+    
+    if (filteredFavorites.length === 0) {
+      favoritesGrid.innerHTML = `
+        <div class="col-span-full py-10 text-center">
+          <p class="text-gray-500 dark:text-gray-400">No favorites in this category</p>
+        </div>
+      `;
+      return;
+    }
+    
+    favoritesGrid.innerHTML = filteredFavorites.map(item => `
+      <div class="card-hover bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden" data-id="${item.id}">
+        <div class="relative">
+          <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover">
+          <button class="favorite-btn absolute top-2 right-2 text-2xl favorite-animation heart-filled" data-id="${item.id}">
+            ❤️
+          </button>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-xs text-gray-500 dark:text-gray-400 capitalize">${item.category}</span>
+              <h3 class="font-semibold text-lg">${item.name}</h3>
+            </div>
+            <span class="bg-teal-50 dark:bg-teal-900 text-teal-700 dark:text-teal-300 text-xs font-bold px-2 py-1 rounded">$${item.price}</span>
+          </div>
+          ${item.tags && item.tags.length > 0 ? `
+            <div class="flex flex-wrap gap-1 mt-2">
+              ${item.tags.map(tag => `
+                <span class="text-xs px-2 py-0.5 rounded ${
+                  tag === 'popular' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                  tag === 'premium' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
+                  tag === 'limited' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                  tag === 'seasonal' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                  tag === 'fresh' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                  'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                }">${tag}</span>
+              `).join('')}
+            </div>
+          ` : ''}
+          <button class="view-details mt-3 w-full bg-teal-500 hover:bg-teal-600 text-white py-1.5 rounded text-sm transition-colors duration-300" data-id="${item.id}">
+            View Details
+          </button>
+        </div>
+      </div>
+    `).join('');
+    
+    // Add event listeners to buttons
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = parseInt(btn.dataset.id);
+        toggleFavorite(id);
+      });
+    });
+    
+    document.querySelectorAll('.view-details').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        openModal(id);
+      });
+    });
+    
+    document.querySelectorAll('.card-hover').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = parseInt(card.dataset.id);
+        openModal(id);
+      });
+    });
+  }
+  
+  // Toggle favorite status
+  function toggleFavorite(id) {
+    const btn = event.target;
+    btn.classList.add('favorite-animation');
+    
+    // Add vibration effect if supported
+    if (navigator.vibrate) {
+      navigator.vibrate(100);
+    }
+    
+    setTimeout(() => {
+      const index = favorites.findIndex(f => f.id === id);
+      if (index !== -1) {
+        favorites.splice(index, 1);
+        // If we're removing from modal, close it
+        if (selectedItemId === id) {
+          closeModalHandler();
+        }
+        updateFavorites();
+        
+        // Show toast notification
+        showToast('Item removed from favorites');
+      }
+    }, 600);
+  }
+  
+  // Open modal with item details
+  function openModal(id) {
+    const item = favorites.find(f => f.id === id);
+    if (!item) return;
+    
+    selectedItemId = id;
+    modalTitle.textContent = item.name;
+    modalImage.src = item.image;
+    modalImage.alt = item.name;
+    
+    actionModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  // Close modal handler
+  function closeModalHandler() {
+    actionModal.classList.add('hidden');
+    document.body.style.overflow = '';
+    selectedItemId = null;
+  }
+  
+  // Show toast notification
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate__animated animate__fadeInUp';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.classList.remove('animate__fadeInUp');
+      toast.classList.add('animate__fadeOutDown');
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 500);
+    }, 2000);
+  }
+  
+  // Filter buttons functionality
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.filter;
+      
+      // Update active button styles
+      filterButtons.forEach(b => {
+        if (b.dataset.filter === activeFilter) {
+          b.classList.remove('bg-gray-100', 'dark:bg-gray-700');
+          b.classList.add('bg-teal-500', 'text-white');
+        } else {
+          b.classList.remove('bg-teal-500', 'text-white');
+          b.classList.add('bg-gray-100', 'dark:bg-gray-700');
+        }
+      });
+      
+      updateFavorites();
+    });
+  });
+  
+  // Event listeners
+  closeModal.addEventListener('click', closeModalHandler);
+  removeFromFavorites.addEventListener('click', () => {
+    if (selectedItemId) {
+      toggleFavorite(selectedItemId);
+    }
+  });
+  
+  // Initialize the favorites display
+  updateFavorites();
+  
+  // Add sorting functionality for favorites
+  document.addEventListener('DOMContentLoaded', () => {
+    // Sorting animation
+    const sortOrder = [
+      { id: 'sortByName', label: 'Sort by Name' },
+      { id: 'sortByPrice', label: 'Sort by Price: Low to High' },
+      { id: 'sortByPriceDesc', label: 'Sort by Price: High to Low' }
+    ];
+    
+    let currentSortIndex = 0;
+    
+    // Create sorting button
+    const sortingContainer = document.createElement('div');
+    sortingContainer.className = 'fixed bottom-24 right-4 z-40';
+    
+    const sortingButton = document.createElement('button');
+    sortingButton.className = 'bg-white dark:bg-gray-700 text-teal-600 dark:text-teal-400 p-3 rounded-full shadow-lg flex items-center justify-center';
+    sortingButton.innerHTML = `
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+      </svg>
+    `;
+    
+    sortingContainer.appendChild(sortingButton);
+    document.body.appendChild(sortingContainer);
+    
+    sortingButton.addEventListener('click', () => {
+      currentSortIndex = (currentSortIndex + 1) % sortOrder.length;
+      const { id } = sortOrder[currentSortIndex];
+      
+      if (id === 'sortByName') {
+        favorites.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (id === 'sortByPrice') {
+        favorites.sort((a, b) => a.price - b.price);
+      } else if (id === 'sortByPriceDesc') {
+        favorites.sort((a, b) => b.price - a.price);
+      }
+      
+      updateFavorites();
+      showToast(sortOrder[currentSortIndex].label);
+    });
+  });
+</script>
+
+</body>
+</html>
