@@ -195,70 +195,11 @@
             </div>
         </div>
         
-        <!-- FAQs with collapsible sections -->
-        <div class="mt-6 bg-white rounded-xl p-6 shadow-sm slide-in">
-            <h2 class="text-lg font-semibold mb-4">Frequently Asked Questions</h2>
-            
-            <div class="border-b pb-2">
-                <button class="faq-toggle w-full text-left font-medium flex justify-between items-center py-2">
-                    <span>What are your delivery hours?</span>
-                    <span class="transform transition-transform duration-300">▼</span>
-                </button>
-                <div class="faq-content hidden pt-2 pb-4 text-gray-600 text-sm">
-                    We deliver from 10AM to 7PM, seven days a week. For same-day delivery, please place your order before 2PM.
-                </div>
-            </div>
-            
-            <div class="border-b pb-2">
-                <button class="faq-toggle w-full text-left font-medium flex justify-between items-center py-2">
-                    <span>Do you offer custom arrangements?</span>
-                    <span class="transform transition-transform duration-300">▼</span>
-                </button>
-                <div class="faq-content hidden pt-2 pb-4 text-gray-600 text-sm">
-                    Yes! We love creating custom arrangements. Please call us directly or use the contact form to discuss your specific requirements.
-                </div>
-            </div>
-            
-            <div class="border-b pb-2">
-                <button class="faq-toggle w-full text-left font-medium flex justify-between items-center py-2">
-                    <span>What's your return policy?</span>
-                    <span class="transform transition-transform duration-300">▼</span>
-                </button>
-                <div class="faq-content hidden pt-2 pb-4 text-gray-600 text-sm">
-                    If you're not satisfied with your flowers upon delivery, please contact us within 24 hours and we'll make it right.
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Floating action button -->
-    <div class="fixed bottom-24 right-4 z-40">
-        <button id="chatButton" class="bg-teal-500 hover:bg-teal-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center pulse">
-            <span class="text-2xl">💬</span>
-        </button>
-    </div>
+    
 
-    <!-- Chat window (hidden by default) -->
-    <div id="chatWindow" class="fixed bottom-24 right-4 w-80 bg-white rounded-xl shadow-lg z-30 hidden">
-        <div class="p-4 bg-teal-500 text-white rounded-t-xl flex justify-between items-center">
-            <h3 class="font-medium">Chat with us</h3>
-            <button id="closeChat" class="text-white hover:text-gray-200">✖</button>
-        </div>
-        <div class="p-4 h-80 overflow-y-auto" id="chatMessages">
-            <div class="mb-3">
-                <div class="bg-gray-100 rounded-lg p-3 inline-block">
-                    Hi there! How can we help you today?
-                </div>
-            </div>
-        </div>
-        <div class="p-3 border-t">
-            <div class="flex gap-2">
-                <input type="text" id="chatInput" placeholder="Type your message..." 
-                      class="flex-1 p-2 border rounded-lg focus:border-teal-500 focus:outline-none">
-                <button id="sendChat" class="bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600">➤</button>
-            </div>
-        </div>
-    </div>
+  
 
     <!-- Bottom Nav -->
     <div class="fixed bottom-0 w-full bg-white shadow-lg border-t z-20">
@@ -267,14 +208,11 @@
                 <span class="text-xl">🏠</span>
                 <span class="text-xs">Home</span>
             </a>
-            <a href="/catalog" class="flex flex-col items-center text-gray-500">
+            <a href="/favourites" class="flex flex-col items-center text-gray-500">
                 <span class="text-xl">🌷</span>
-                <span class="text-xs">Catalog</span>
+                <span class="text-xs">favourites</span>
             </a>
-            <a href="/orders" class="flex flex-col items-center text-gray-500">
-                <span class="text-xl">📦</span>
-                <span class="text-xs">Orders</span>
-            </a>
+            
             <a href="/contact" class="flex flex-col items-center text-teal-500">
                 <span class="text-xl">📞</span>
                 <span class="text-xs">Contact</span>
