@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,44 +10,49 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+        font-family: 'Poppins', sans-serif;
     }
     .logo-text {
-      font-family: 'Montserrat', sans-serif;
+        font-family: 'Montserrat', sans-serif;
     }
     .favorite-animation {
-      animation: heartBeat 1.2s;
+        animation: heartBeat 1.2s;
     }
     @keyframes heartBeat {
-      0% { transform: scale(1); }
-      14% { transform: scale(1.3); }
-      28% { transform: scale(1); }
-      42% { transform: scale(1.3); }
-      70% { transform: scale(1); }
+        0% { transform: scale(1); }
+        14% { transform: scale(1.3); }
+        28% { transform: scale(1); }
+        42% { transform: scale(1.3); }
+        70% { transform: scale(1); }
     }
     .card-hover {
-      transition: all 0.3s ease;
+        transition: all 0.3s ease;
     }
     .card-hover:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     }
     .heart-empty {
-      background: linear-gradient(to bottom, #ffffff 0%, #ffffff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+        color: #e2e8f0;
     }
     .heart-filled {
-      background: linear-gradient(to bottom, #ff6b6b 0%, #ee0979 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+        background: linear-gradient(to bottom, #ff6b6b 0%, #ee0979 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     .slide-in {
-      opacity: 0;
-      transform: translateY(20px);
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    .featured-category {
+        background-size: 200% 200%;
+        animation: gradient-shift 5s ease infinite;
+    }
+    @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
   </style>
 </head>
@@ -77,37 +82,40 @@
 </header>
 
 <!-- Favorites Filter -->
-<div class="flex overflow-x-auto whitespace-nowrap px-4 py-3 space-x-3 bg-white dark:bg-gray-800 shadow-sm slide-in">
-  <button class="filter-btn px-6 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-full transition-colors duration-300" data-filter="all">All</button>
-  <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="indoor">Indoor</button>
-  <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="outdoor">Outdoor</button>
-  <button class="filter-btn px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white rounded-full transition-colors duration-300" data-filter="wedding">Wedding</button>
+<div class="mt-20 px-4 max-w-3xl mx-auto slide-in">
+    <div class="flex items-center mb-2">
+        <h2 class="text-sm font-medium text-gray-500">Filter By</h2>
+    </div>
+    <div class="flex flex-wrap gap-2 pb-2 overflow-x-auto">
+        <button class="filter-btn category-tag bg-teal-500 text-white px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap" data-filter="all">All</button>
+        <button class="filter-btn category-tag bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap" data-filter="indoor">Indoor</button>
+        <button class="filter-btn category-tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap" data-filter="outdoor">Outdoor</button>
+        <button class="filter-btn category-tag bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm cursor-pointer whitespace-nowrap" data-filter="wedding">Wedding</button>
+    </div>
 </div>
 
 <!-- Favorites Grid -->
-<div class="p-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 slide-in" id="favoritesGrid">
-  <!-- Favorite items will be dynamically added here -->
+<div class="p-4 grid grid-cols-2 gap-4 max-w-3xl mx-auto" id="favoritesGrid">
+    <!-- Favorite items will be dynamically added here -->
 </div>
 
 <!-- Empty State -->
-<div id="emptyState" class="hidden flex flex-col items-center justify-center py-16 px-4">
-  <div class="animate__animated animate__fadeIn">
-    <div class="mb-6 p-4 bg-pink-50 dark:bg-gray-700 rounded-full">
-      <svg class="w-16 h-16 text-pink-400" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
-      </svg>
+<div id="emptyState" class="hidden">
+    <div class="flex flex-col items-center justify-center py-16 px-4 max-w-3xl mx-auto">
+        <div class="mb-6 p-4 bg-teal-50 rounded-full">
+            <span class="text-5xl">❤️</span>
+        </div>
+        <h3 class="text-xl font-semibold text-center mb-2">Your favorites list is empty</h3>
+        <p class="text-gray-500 text-center mb-8">Start adding items you love to your favorites</p>
+        <a href="/" class="bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+            Explore Categories
+        </a>
     </div>
-    <h3 class="text-xl font-medium text-center mb-2">Your favorites list is empty</h3>
-    <p class="text-gray-500 dark:text-gray-400 text-center mb-8">Start adding items you love to your favorites</p>
-    <a href="index.html" class="inline-block px-8 py-3 bg-gradient-to-r from-teal-500 to-teal-400 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      Browse Flowers
-    </a>
-  </div>
 </div>
 
 <!-- Favorite Actions Modal -->
 <div id="actionModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-  <div class="bg-white dark:bg-gray-800 p-6 rounded-xl w-11/12 max-w-md animate__animated animate__zoomIn">
+  <div class="bg-white p-6 rounded-xl w-11/12 max-w-md animate__animated animate__zoomIn">
     <div class="flex justify-between items-center mb-4">
       <h3 class="text-lg font-bold" id="modalTitle">Flower Name</h3>
       <button id="closeModal" class="text-2xl">&times;</button>
@@ -133,7 +141,7 @@
 </div>
 
 <!-- Bottom Nav -->
-<nav class="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 flex justify-around items-center py-3 shadow-lg">
+<nav class="fixed bottom-0 left-0 w-full bg-white flex justify-around items-center py-3 shadow-lg">
   <a href="/" class="flex flex-col items-center">
     <span>🏠</span>
     <span class="text-xs">Home</span>
@@ -220,14 +228,14 @@
     if (filteredFavorites.length === 0) {
       favoritesGrid.innerHTML = `
         <div class="col-span-full py-10 text-center">
-          <p class="text-gray-500 dark:text-gray-400">No favorites in this category</p>
+          <p class="text-gray-500">No favorites in this category</p>
         </div>
       `;
       return;
     }
 
     favoritesGrid.innerHTML = filteredFavorites.map(item => `
-      <div class="card-hover bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden" data-id="${item.id}">
+      <div class="card-hover bg-white rounded-xl shadow-lg overflow-hidden" data-id="${item.id}">
         <div class="relative">
           <img src="${item.image}" alt="${item.name}" class="w-full h-40 object-cover">
           <button class="favorite-btn absolute top-2 right-2 text-2xl favorite-animation heart-filled" data-id="${item.id}">
@@ -237,21 +245,21 @@
         <div class="p-4">
           <div class="flex justify-between items-start">
             <div>
-              <span class="text-xs text-gray-500 dark:text-gray-400 capitalize">${item.category}</span>
+              <span class="text-xs text-gray-500 capitalize">${item.category}</span>
               <h3 class="font-semibold text-lg">${item.name}</h3>
             </div>
-            <span class="bg-teal-50 dark:bg-teal-900 text-teal-700 dark:text-teal-300 text-xs font-bold px-2 py-1 rounded">$${item.price}</span>
+            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2 py-1 rounded">$${item.price}</span>
           </div>
           ${item.tags && item.tags.length > 0 ? `
             <div class="flex flex-wrap gap-1 mt-2">
               ${item.tags.map(tag => `
                 <span class="text-xs px-2 py-0.5 rounded ${
-                  tag === 'popular' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                  tag === 'premium' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' :
-                  tag === 'limited' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
-                  tag === 'seasonal' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                  tag === 'fresh' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
-                  'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                  tag === 'popular' ? 'bg-yellow-100 text-yellow-800' :
+                  tag === 'premium' ? 'bg-purple-100 text-purple-800' :
+                  tag === 'limited' ? 'bg-red-100 text-red-800' :
+                  tag === 'seasonal' ? 'bg-green-100 text-green-800' :
+                  tag === 'fresh' ? 'bg-blue-100 text-blue-800' :
+                  'bg-gray-100 text-gray-800'
                 }">${tag}</span>
               `).join('')}
             </div>
@@ -353,18 +361,21 @@
   // Filter buttons functionality
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.filter;
-
-      // Update active button styles
       filterButtons.forEach(b => {
-        if (b.dataset.filter === activeFilter) {
-          b.classList.remove('bg-gray-100', 'dark:bg-gray-700');
-          b.classList.add('bg-teal-500', 'text-white');
-        } else {
-          b.classList.remove('bg-teal-500', 'text-white');
-          b.classList.add('bg-gray-100', 'dark:bg-gray-700');
+        b.classList.remove('bg-teal-500', 'text-white');
+        if (b.dataset.filter === 'indoor') {
+            b.classList.add('bg-red-100', 'text-red-800');
+        } else if (b.dataset.filter === 'outdoor') {
+            b.classList.add('bg-blue-100', 'text-blue-800');
+        } else if (b.dataset.filter === 'wedding') {
+            b.classList.add('bg-purple-100', 'text-purple-800');
         }
       });
+      
+      btn.classList.remove('bg-red-100', 'bg-blue-100', 'bg-purple-100', 'text-red-800', 'text-blue-800', 'text-purple-800');
+      btn.classList.add('bg-teal-500', 'text-white');
+      
+      activeFilter = btn.dataset.filter;
 
       updateFavorites();
     });
@@ -397,7 +408,7 @@
     sortingContainer.className = 'fixed bottom-24 right-4 z-40';
 
     const sortingButton = document.createElement('button');
-    sortingButton.className = 'bg-white dark:bg-gray-700 text-teal-600 dark:text-teal-400 p-3 rounded-full shadow-lg flex items-center justify-center';
+    sortingButton.className = 'bg-white text-teal-600 p-3 rounded-full shadow-lg flex items-center justify-center';
     sortingButton.innerHTML = `
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
