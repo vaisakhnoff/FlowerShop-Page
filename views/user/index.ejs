@@ -140,7 +140,7 @@
                     <button id="layoutToggle" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
                         📱
                     </button>
-                </div>a
+                </div>
             </div>
             
             <div class="search-container">
@@ -303,32 +303,6 @@
             <button class="mt-4 bg-white text-red-500 px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors">
                 View Collection
             </button>
-        </div>
-    </div>
-
-    <!-- Category Detail Modal (hidden by default) -->
-    <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-xl mx-4 w-full max-w-md overflow-hidden">
-            <div class="bg-gradient-to-r from-teal-500 to-blue-500 p-6 text-white relative">
-                <button id="closeModal" class="absolute top-4 right-4 text-white hover:text-gray-200">✖</button>
-                <div id="modalIcon" class="text-5xl mb-2">💐</div>
-                <h3 id="modalTitle" class="text-2xl font-bold">Category Name</h3>
-                <p id="modalItemCount" class="text-sm opacity-90">0 items</p>
-            </div>
-            <div class="p-6">
-                <div id="modalDescription" class="text-gray-600 mb-4">
-                    Explore our beautiful collection of handcrafted items.
-                </div>
-                <div class="mb-6">
-                    <h4 class="font-medium mb-2">Popular in this category:</h4>
-                    <div id="modalPopular" class="grid grid-cols-2 gap-2">
-                        <!-- Popular items will be added here -->
-                    </div>
-                </div>
-                <button id="viewAllButton" class="w-full bg-teal-500 text-white py-3 rounded-lg hover:bg-teal-600 transition-colors">
-                    View All Items
-                </button>
-            </div>
         </div>
     </div>
 
@@ -510,7 +484,7 @@
                                 </div>
                             `;
                             resultItem.addEventListener('click', () => {
-                                showCategoryDetails(category.id);
+                                // showCategoryDetails(category.id);
                                 searchResults.classList.remove('active');
                                 searchInput.value = '';
                                 clearSearch.classList.add('hidden');
@@ -545,47 +519,13 @@
             categoryCards.forEach(card => {
                 card.addEventListener('click', function() {
                     const categoryId = this.dataset.id;
-                    showCategoryDetails(categoryId);
-                    addToRecentlyViewed(categoryId);
+                    console.log('Navigating to category:', categoryId); // Debug log
+                    window.location.href = `/shop?category=${encodeURIComponent(categoryId)}`;
                 });
             });
             
-            // Show category details in modal
-            function showCategoryDetails(categoryId) {
-                const category = categoryData.find(cat => cat.id === categoryId);
-                
-                if (category) {
-                    // Update modal with category details
-                    modalTitle.textContent = category.name;
-                    modalIcon.textContent = category.icon;
-                    modalItemCount.textContent = `${category.items} items`;
-                    document.getElementById('modalDescription').textContent = category.description;
-                    
-                    // Show popular items
-                    modalPopular.innerHTML = '';
-                    category.popular.forEach(item => {
-                        const itemDiv = document.createElement('div');
-                        itemDiv.className = 'bg-gray-100 p-2 rounded text-sm';
-                        itemDiv.textContent = item;
-                        modalPopular.appendChild(itemDiv);
-                    });
-                    
-                    // Set view all button action
-                    viewAllButton.onclick = function() {
-                        // Navigate to category page
-                        alert(`Navigating to ${category.name} category page`);
-                        categoryModal.classList.add('hidden');
-                    };
-                    
-                    // Show modal with animation
-                    categoryModal.classList.remove('hidden');
-                    gsap.fromTo(categoryModal.querySelector('.bg-white'), 
-                        { opacity: 0, y: 50 },
-                        { opacity: 1, y: 0, duration: 0.3 }
-                    );
-                }
-            }
-            
+            // Remove or comment out the showCategoryDetails and modal logic
+
             // Close modal
             closeModal.addEventListener('click', function() {
                 gsap.to(categoryModal.querySelector('.bg-white'), {
@@ -643,7 +583,7 @@
                             <p class="text-xs font-medium mt-1 truncate">${category.name}</p>
                         `;
                         itemDiv.addEventListener('click', () => {
-                            showCategoryDetails(category.id);
+                            // showCategoryDetails(category.id);
                         });
                         recentlyViewed.appendChild(itemDiv);
                     }

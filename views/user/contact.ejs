@@ -84,9 +84,9 @@
                class="flex flex-col items-center p-4 bg-green-100 hover:bg-green-200 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1 slide-in">
                 <span class="text-3xl mb-2">📞</span>
                 <span class="font-semibold">Call Now</span>
-                <span class="text-sm text-gray-500 mt-1">+91 8888888888</span>
+                <span class="text-sm text-gray-500 mt-1">+91 9388121197</span>
             </a>
-            <a href="https://wa.me/918888888888" 
+            <a href="https://wa.me/919388121197" 
                class="flex flex-col items-center p-4 bg-green-100 hover:bg-green-200 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1 slide-in">
                 <span class="text-3xl mb-2">💬</span>
                 <span class="font-semibold">WhatsApp</span>
@@ -164,36 +164,7 @@
             </button>
         </div>
 
-        <!-- Location with interactive map -->
-        <div class="mt-6 bg-white rounded-xl p-6 shadow-sm slide-in">
-            <h2 class="text-lg font-semibold mb-2">Visit Our Store</h2>
-            <div class="flex items-start">
-                <div class="mr-4 mt-1 text-teal-500 text-xl">📍</div>
-                <div>
-                    <p class="text-gray-600">123 Flower Street</p>
-                    <p class="text-gray-600">Bangalore, Karnataka</p>
-                    <p class="text-gray-500 text-sm mt-1">Open: Mon-Sat, 9AM-8PM</p>
-                </div>
-            </div>
-            
-            <div class="mt-4 rounded-lg overflow-hidden h-40 bg-gray-200">
-                <!-- Placeholder for map -->
-                <div id="map" class="w-full h-full flex items-center justify-center text-gray-500">
-                    Interactive Map Loading...
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4 mt-4">
-                <button id="directionsBtn" 
-                        class="border border-teal-500 text-teal-500 py-2 rounded-lg hover:bg-teal-50 transition-colors flex items-center justify-center">
-                    <span class="mr-2">🚗</span> Get Directions
-                </button>
-                <button id="shareLocationBtn"
-                        class="border border-teal-500 text-teal-500 py-2 rounded-lg hover:bg-teal-50 transition-colors flex items-center justify-center">
-                    <span class="mr-2">📤</span> Share Location
-                </button>
-            </div>
-        </div>
+    
         
     </div>
 
@@ -509,37 +480,8 @@
             });
         });
 
-        // Map functionality
-        directionsBtn.addEventListener('click', function() {
-            window.open('https://maps.google.com?q=123+Flower+Street+Bangalore+Karnataka');
-        });
+       
 
-        shareLocationBtn.addEventListener('click', function() {
-            // Create a shareable link with the location
-            const locationText = "Anjali Flower Works: 123 Flower Street, Bangalore, Karnataka";
-            const shareUrl = `https://maps.google.com?q=123+Flower+Street+Bangalore+Karnataka`;
-            
-            // Use Web Share API if available
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Anjali Flower Works',
-                    text: locationText,
-                    url: shareUrl
-                })
-                .catch(console.error);
-            } else {
-                // Fallback - copy to clipboard
-                const tempInput = document.createElement('input');
-                document.body.appendChild(tempInput);
-                tempInput.value = `${locationText} - ${shareUrl}`;
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-                
-                // Show copied notification
-                alert('Location copied to clipboard!');
-            }
-        });
 
         // Form fields animation on focus
         formFields.forEach(field => {
