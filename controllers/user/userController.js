@@ -1,38 +1,64 @@
-const allProducts = [
-            { id: 1, name: "Red Roses Bouquet", category: "roses", price: 499, image: "🌹", description: "Beautiful red roses arrangement" },
-            { id: 2, name: "White Roses", category: "roses", price: 549, image: "🌹", description: "Elegant white roses bouquet" },
-            { id: 3, name: "Pink Rose Bouquet", category: "roses", price: 599, image: "🌹", description: "Soft pink roses for special moments" },
-            { id: 4, name: "Orchid Plant", category: "plants", price: 799, image: "🪴", description: "Beautiful orchid plant for your home" },
-            { id: 5, name: "Snake Plant", category: "plants", price: 399, image: "🌿", description: "Low maintenance snake plant" },
-            { id: 6, name: "Peace Lily", category: "plants", price: 599, image: "🌱", description: "Elegant peace lily plant" },
-            { id: 7, name: "Monstera Plant", category: "plants", price: 899, image: "🌿", description: "Popular monstera deliciosa" },
-            { id: 8, name: "Birthday Balloon Bouquet", category: "birthdays", price: 599, image: "🎂", description: "Colorful birthday arrangement" },
-            { id: 9, name: "Birthday Special Box", category: "birthdays", price: 899, image: "🎁", description: "Special birthday gift box" },
-            { id: 10, name: "Cake & Flowers Combo", category: "birthdays", price: 1299, image: "🎂", description: "Perfect birthday celebration combo" },
-            { id: 11, name: "Bridal Bouquet", category: "weddings", price: 999, image: "💍", description: "Elegant bridal bouquet" },
-            { id: 12, name: "Wedding Centerpiece", category: "weddings", price: 1299, image: "💐", description: "Beautiful wedding centerpiece" },
-            { id: 13, name: "Wedding Arch Decoration", category: "weddings", price: 2499, image: "🌸", description: "Stunning wedding arch flowers" },
-            { id: 14, name: "Exotic Orchid Mix", category: "exotic", price: 1199, image: "🌺", description: "Rare exotic orchid arrangement" },
-            { id: 15, name: "Bird of Paradise", category: "exotic", price: 899, image: "🦜", description: "Stunning bird of paradise flower" },
-            { id: 16, name: "Anthurium Arrangement", category: "exotic", price: 799, image: "🌺", description: "Beautiful anthurium flowers" },
-            { id: 17, name: "Mixed Flower Bouquet", category: "bouquets", price: 699, image: "💐", description: "Beautiful mixed flower arrangement" },
-            { id: 18, name: "Sunflower Bouquet", category: "bouquets", price: 599, image: "🌻", description: "Bright sunflower bouquet" },
-            { id: 19, name: "Lily Bouquet", category: "bouquets", price: 799, image: "🌸", description: "Elegant lily flower bouquet" },
-            { id: 20, name: "Corporate Desk Plant", category: "corporate", price: 449, image: "🏢", description: "Perfect plant for office desk" },
-            { id: 21, name: "Executive Gift Hamper", category: "corporate", price: 1499, image: "🎁", description: "Premium corporate gift hamper" },
-            { id: 22, name: "Chocolate & Flowers", category: "gifts", price: 799, image: "🍫", description: "Perfect combination of flowers and chocolates" },
-            { id: 23, name: "Teddy & Roses", category: "gifts", price: 899, image: "🧸", description: "Cute teddy bear with roses" },
-            { id: 24, name: "Premium Gift Basket", category: "gifts", price: 1299, image: "🎁", description: "Luxury gift basket with flowers" }
-        ];
+const Product = require('../../model/products');
+const Category = require('../../model/category');
 
+const getHome = async (req, res) => {
+    try {
+        const categories = await Category.find({});
+        const products = await Product.find({}).populate('categories');
+        res.render('user/index', { 
+            categories,
+            products
+        });
+    } catch (error) {
+        console.error('Home page error:', error);
+        res.render('user/index', { 
+            categories: [],
+            products: [],
+            error: 'Error loading data'
+        });
+    }
+};
+
+const getProductDetail = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await Product.findById(productId).populate('categories');
         
+        if (!product) {
+            return res.status(404).render('error', { 
+                message: 'Product not found' 
+            });
+        }
 
-const getHome = async (req,res) => {
-    res.render('index');
-}
+        // Get similar products from same category
+        const similarProducts = await Product.find({
+            categories: { $in: product.categories },
+            _id: { $ne: product._id }
+        })
+        .limit(4)
+        .populate('categories')
+        .lean(); // Use lean() for better performance
 
-const getProductDetail = async(req,res)=>{
-    res.render('product')
+        // Map similar products to include required fields
+        const mappedSimilarProducts = similarProducts.map(p => ({
+            id: p._id,
+            name: p.name,
+            price: p.price,
+            image: p.images && p.images.length > 0 ? 
+                   `<img src="${p.images[0].path}" class="w-full h-full object-cover"/>` : 
+                   '🌸'
+        }));
+
+        res.render('user/product', { 
+            product,
+            similarProducts: mappedSimilarProducts
+        });
+    } catch (error) {
+        console.error('Product detail error:', error);
+        res.render('error', { 
+            message: 'Error loading product details' 
+        });
+    }
 }
 
 const getFavorites = async (req, res) => {
@@ -47,37 +73,39 @@ const getContact = async (req, res) => {
 const getshopPage = async (req, res) => {
     try {
         const { category } = req.query;
-        console.log('Category requested:', category);
+        let products;
         
-        let products = allProducts;
         if (category && category !== 'all') {
-            products = allProducts.filter(p => p.category.toLowerCase() === category.toLowerCase());
-            console.log(`Filtered ${products.length} products for category: ${category}`);
+            products = await Product.find({ 
+                categories: { $in: [category] } 
+            }).populate('categories');
+        } else {
+            products = await Product.find({}).populate('categories');
         }
         
-        if (!products || products.length === 0) {
-            console.log('No products found for category:', category);
-        }
+        const categories = await Category.find({});
         
-        res.render('shopPage', { 
+        res.render('user/shopPage', { 
             products, 
+            categories,
             selectedCategory: category || 'all',
             error: null
         });
     } catch (error) {
         console.error('Shop page error:', error);
-        res.status(500).render('shopPage', { 
+        res.render('user/shopPage', { 
             products: [], 
+            categories: [],
             selectedCategory: null,
             error: 'Error loading products'
         });
     }
 };
 
-module.exports ={
+module.exports = {
     getHome,
     getProductDetail,
     getFavorites,
     getContact,
     getshopPage
-}
+};

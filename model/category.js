@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
   name: {
@@ -11,7 +11,7 @@ const categorySchema = new mongoose.Schema({
   },
   bgColor: {
     type: String,
-    default: 'bg-gray-100', // fallback
+    default: 'bg-gray-100',
   },
   itemCount: {
     type: Number,
@@ -21,4 +21,4 @@ const categorySchema = new mongoose.Schema({
   timestamps: true,
 });
 
-export default mongoose.model('Category', categorySchema);
+module.exports = mongoose.model('Category', categorySchema);

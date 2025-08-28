@@ -1,46 +1,47 @@
-
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema(
-  {
+const productSchema = new mongoose.Schema({
     name: {
-      type: String,
-      required: true,
-      trim: true,
+        type: String,
+        required: true,
+        trim: true,
     },
-    
     price: {
-      type: Number,
-      required: true,
+        type: Number,
+        required: true,
     },
-    categories: [
-      {
+    categories: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: true,
-      },
-    ],
+        validate: {
+            validator: async function(value) {
+                const category = await mongoose.model('Category').findById(value);
+                return category !== null;
+            },
+            message: 'Invalid category'
+        }
+    }],
     description: {
-      type: String,
-      required: true,
+        type: String,
+        required: true,
     },
+    images: [{
+        filename: String,
+        path: String,
+        isDefault: {
+            type: Boolean,
+            default: false
+        }
+    }],
     specifications: {
-      type: Map,
-      of: String, // Ex: { Length: "3 feet", Freshness: "24 hours" }
-    },
-    customizations: {
-      type: Object, // Flexible format
-    },
-    imageUrls: {
-      type: [String], // Will store uploaded image file paths or URLs
-      required: true,
+        type: Map,
+        of: String,
     },
     quantity: {
-      type: Number,
-      default: 1,
-    },
-  },
-  { timestamps: true }
-);
+        type: Number,
+        default: 1,
+    }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

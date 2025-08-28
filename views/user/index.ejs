@@ -194,57 +194,19 @@
             <div class="text-sm text-teal-600" id="categoryCount">8 categories</div>
         </div>
         
+        <!-- Categories will be dynamically injected here by server-side code -->
         <div class="grid grid-cols-2 gap-4" id="categoryGrid">
-            <div class="category-card bg-pink-100 p-6 rounded-xl text-center cursor-pointer" data-id="bouquets" data-items="20">
-                <div class="relative">
-                    <span class="text-4xl block mb-2">💐</span>
-                    <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full popular-badge">Popular</span>
+            <% categories.forEach(category => { %>
+                <div class="category-card bg-white p-6 rounded-xl text-center cursor-pointer" 
+                     data-id="<%= category._id %>" 
+                     onclick="window.location.href='/shop?category=<%= category._id %>'">
+                    <div class="relative">
+                        <span class="text-4xl block mb-2"><%= category.emoji %></span>
+                    </div>
+                    <h3 class="font-semibold"><%= category.name %></h3>
+                    <p class="text-xs text-gray-600 mt-1"><%= category.itemCount %> items</p>
                 </div>
-                <h3 class="font-semibold">Bouquets</h3>
-                <p class="text-xs text-gray-600 mt-1">20 items</p>
-            </div>
-            
-            <div class="category-card bg-green-100 p-6 rounded-xl text-center cursor-pointer" data-id="plants" data-items="15">
-                <span class="text-4xl block mb-2">🌿</span>
-                <h3 class="font-semibold">Indoor Plants</h3>
-                <p class="text-xs text-gray-600 mt-1">15 items</p>
-            </div>
-            
-            <div class="category-card bg-blue-100 p-6 rounded-xl text-center cursor-pointer" data-id="birthdays" data-items="12">
-                <span class="text-4xl block mb-2">🎂</span>
-                <h3 class="font-semibold">Birthday Specials</h3>
-                <p class="text-xs text-gray-600 mt-1">12 items</p>
-            </div>
-            
-            <div class="category-card bg-purple-100 p-6 rounded-xl text-center cursor-pointer" data-id="weddings" data-items="18">
-                <span class="text-4xl block mb-2">💍</span>
-                <h3 class="font-semibold">Wedding Collection</h3>
-                <p class="text-xs text-gray-600 mt-1">18 items</p>
-            </div>
-            
-            <div class="category-card bg-yellow-100 p-6 rounded-xl text-center cursor-pointer" data-id="exotic" data-items="8">
-                <span class="text-4xl block mb-2">🌺</span>
-                <h3 class="font-semibold">Exotic Flowers</h3>
-                <p class="text-xs text-gray-600 mt-1">8 items</p>
-            </div>
-            
-            <div class="category-card bg-red-100 p-6 rounded-xl text-center cursor-pointer" data-id="roses" data-items="10">
-                <span class="text-4xl block mb-2">🌹</span>
-                <h3 class="font-semibold">Roses</h3>
-                <p class="text-xs text-gray-600 mt-1">10 items</p>
-            </div>
-            
-            <div class="category-card bg-indigo-100 p-6 rounded-xl text-center cursor-pointer" data-id="corporate" data-items="5">
-                <span class="text-4xl block mb-2">🏢</span>
-                <h3 class="font-semibold">Corporate Events</h3>
-                <p class="text-xs text-gray-600 mt-1">5 items</p>
-            </div>
-            
-            <div class="category-card bg-orange-100 p-6 rounded-xl text-center cursor-pointer" data-id="gifts" data-items="14">
-                <span class="text-4xl block mb-2">🎁</span>
-                <h3 class="font-semibold">Gift Hampers</h3>
-                <p class="text-xs text-gray-600 mt-1">14 items</p>
-            </div>
+            <% }); %>
         </div>
     </div>
     

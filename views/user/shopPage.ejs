@@ -355,7 +355,47 @@
 
         <!-- Products Grid -->
         <div id="productsContainer" class="mobile-grid">
-            <!-- Products will be loaded here -->
+            <% if (products && products.length > 0) { %>
+                <% products.forEach(product => { %>
+                    <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer"
+                         onclick="window.location.href='/product/<%= product._id %>'">
+                        <div class="aspect-square bg-gray-100">
+                            <% if (product.images && product.images.length > 0) { %>
+                                <img src="<%= product.images[0].path %>" 
+                                     alt="<%= product.name %>"
+                                     class="w-full h-full object-cover">
+                            <% } else { %>
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <span class="text-4xl">🌸</span>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-semibold mb-1"><%= product.name %></h3>
+                            <p class="text-gray-600 text-xs mb-2">
+                                <%= product.description.length > 50 ? 
+                                    product.description.substring(0, 50) + '...' : 
+                                    product.description %>
+                            </p>
+                            <div class="flex items-center justify-between">
+                                <span class="price-badge text-white px-2 py-1 rounded-full text-xs font-semibold">
+                                    ₹<%= product.price %>
+                                </span>
+                                <button class="bg-teal-600 text-white px-3 py-1 rounded-md text-xs"
+                                        onclick="event.stopPropagation()">
+                                    Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div id="emptyState" class="col-span-2 empty-state bg-white rounded-xl shadow-sm p-8 text-center">
+                    <div class="text-4xl mb-4">🔍</div>
+                    <h3 class="text-lg font-semibold mb-2">No products found</h3>
+                    <p class="text-gray-600 mb-4 text-sm">Try adjusting your search or filters</p>
+                </div>
+            <% } %>
         </div>
 
         <!-- Empty State -->
@@ -418,68 +458,70 @@
     </div>
 
     <script>
-        // Safely parse the server data
-        let serverProducts = [];
-        try {
-            serverProducts = <%- JSON.stringify(products || []) %>;
-            console.log('Received products:', serverProducts);
-        } catch (error) {
-            console.error('Error parsing products:', error);
-        }
+        // Initialize server data
+        const serverProducts = <%- JSON.stringify(products || []) %>;
+        const serverCategories = <%- JSON.stringify(categories || []) %>;
 
-        const selectedCategory = "<%= selectedCategory %>" || 'all';
-        console.log('Selected category:', selectedCategory);
-
-        // Initialize product display
-        document.addEventListener('DOMContentLoaded', function() {
+        // Update products display
+        function displayProducts(products) {
             const productsContainer = document.getElementById('productsContainer');
-            const categoryTitle = document.getElementById('categoryTitle');
-            
-            if (!serverProducts || serverProducts.length === 0) {
-                console.log('No products available');
-                document.getElementById('emptyState').classList.remove('hidden');
+            productsContainer.innerHTML = '';
+
+            if (!products || products.length === 0) {
+                productsContainer.innerHTML = `
+                    <div id="emptyState" class="col-span-2 empty-state bg-white rounded-xl shadow-sm p-8 text-center">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <h3 class="text-lg font-semibold mb-2">No products found</h3>
+                        <p class="text-gray-600 mb-4 text-sm">Try adjusting your search or filters</p>
+                    </div>
+                `;
                 return;
             }
 
-            // Update category title
-            categoryTitle.textContent = selectedCategory === 'all' 
-                ? 'All Products' 
-                : `${selectedCategory.charAt(0).toUpperCase()}${selectedCategory.slice(1)}`;
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer';
+                card.onclick = () => window.location.href = `/product/${product._id}`;
+                
+                const imageHtml = product.images && product.images.length > 0 
+                    ? `<img src="${product.images[0].path}" alt="${product.name}" class="w-full h-full object-cover">`
+                    : `<div class="w-full h-full flex items-center justify-center"><span class="text-4xl">🌸</span></div>`;
 
-            // Clear container
-            productsContainer.innerHTML = '';
-            
-            // Render products
-            serverProducts.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card bg-white rounded-lg shadow-sm overflow-hidden';
-                productCard.innerHTML = `
-                    <div class="aspect-square bg-gray-100 flex items-center justify-center">
-                        <span class="text-4xl">${product.image}</span>
+                card.innerHTML = `
+                    <div class="aspect-square bg-gray-100">
+                        ${imageHtml}
                     </div>
                     <div class="p-3">
                         <h3 class="font-semibold mb-1">${product.name}</h3>
-                        <p class="text-gray-600 text-xs mb-2">${product.description}</p>
+                        <p class="text-gray-600 text-xs mb-2">
+                            ${product.description?.length > 50 ? 
+                              product.description.substring(0, 50) + '...' : 
+                              product.description || ''}
+                        </p>
                         <div class="flex items-center justify-between">
                             <span class="price-badge text-white px-2 py-1 rounded-full text-xs font-semibold">
                                 ₹${product.price}
                             </span>
-                            <button class="bg-teal-600 text-white px-3 py-1 rounded-md text-xs">
+                            <button class="bg-teal-600 text-white px-3 py-1 rounded-md text-xs"
+                                    onclick="event.stopPropagation()">
                                 Add
                             </button>
                         </div>
                     </div>
                 `;
-                productsContainer.appendChild(productCard);
+                productsContainer.appendChild(card);
             });
 
             // Animate products
             const cards = document.querySelectorAll('.product-card');
             cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.classList.add('show');
-                }, index * 100);
+                setTimeout(() => card.classList.add('show'), index * 100);
             });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProducts(serverProducts);
         });
     </script>
 </body>
