@@ -224,6 +224,29 @@
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Emoji</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="categoryEmoji" required maxlength="2"
+                                   class="w-16 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-2xl text-center">
+                            <div class="text-sm text-gray-500">
+                                Common: 🌸 🌺 💐 🌹 🌷 🌻 🌼
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Background Color</label>
+                        <select id="categoryBgColor" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="bg-pink-100">Pink</option>
+                            <option value="bg-blue-100">Blue</option>
+                            <option value="bg-green-100">Green</option>
+                            <option value="bg-yellow-100">Yellow</option>
+                            <option value="bg-purple-100">Purple</option>
+                            <option value="bg-red-100">Red</option>
+                            <option value="bg-gray-100">Gray</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                         <textarea id="categoryDescription" rows="3"
                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
@@ -351,12 +374,15 @@
                     return;
                 }
 
+                // Update the category display in loadCategories
                 categories.forEach(category => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <span class="text-2xl mr-2">${category.emoji || '📦'}</span>
+                                <span class="text-2xl mr-2 ${category.bgColor} p-2 rounded-lg">
+                                    ${category.emoji || '📦'}
+                                </span>
                                 <span class="text-sm font-medium text-gray-900">${category.name}</span>
                             </div>
                         </td>
@@ -465,15 +491,24 @@
             try {
                 const categoryData = {
                     name: document.getElementById('categoryName').value,
-                    description: document.getElementById('categoryDescription').value,
-                    emoji: '📦' // Default emoji
+                    emoji: document.getElementById('categoryEmoji').value || '🌸',
+                    bgColor: document.getElementById('categoryBgColor').value,
+                    description: document.getElementById('categoryDescription').value
                 };
 
-                const url = window.currentEditingCategory ? 
-                    `/admin/categories/${window.currentEditingCategory._id}` : 
+                if (!categoryData.name) {
+                    throw new Error('Category name is required');
+                }
+
+                if (!categoryData.emoji) {
+                    throw new Error('Category emoji is required');
+                }
+
+                const url = currentEditingCategory ? 
+                    `/admin/categories/${currentEditingCategory._id}` : 
                     '/admin/categories';
                 
-                const method = window.currentEditingCategory ? 'PUT' : 'POST';
+                const method = currentEditingCategory ? 'PUT' : 'POST';
 
                 const response = await fetch(url, {
                     method: method,
@@ -493,7 +528,7 @@
                 await loadProducts();
             } catch (error) {
                 console.error('Error saving category:', error);
-                showNotification('Error saving category', 'error');
+                showNotification(error.message || 'Error saving category', 'error');
             }
         }
 
@@ -555,10 +590,12 @@
             const category = categories.find(c => c._id === categoryId);
             if (!category) return;
 
-            window.currentEditingCategory = category;
+            currentEditingCategory = category;
             
             document.getElementById('categoryModalTitle').textContent = 'Edit Category';
             document.getElementById('categoryName').value = category.name;
+            document.getElementById('categoryEmoji').value = category.emoji;
+            document.getElementById('categoryBgColor').value = category.bgColor || 'bg-gray-100';
             document.getElementById('categoryDescription').value = category.description || '';
             
             document.getElementById('categoryModal').classList.remove('hidden');
